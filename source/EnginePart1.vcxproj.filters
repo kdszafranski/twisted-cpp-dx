@@ -240,5 +240,8 @@
     <None Include="..\.gitignore">
       <Filter>Other Docs</Filter>
     </None>
+    <None Include="..\.gitattributes">
+      <Filter>Other Docs</Filter>
+    </None>
   </ItemGroup>
 </Project>
