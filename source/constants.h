@@ -112,10 +112,10 @@ const char ZAP[] = "zap";
 const UCHAR ESC_KEY = VK_ESCAPE;       // escape key
 const UCHAR ALT_KEY = VK_MENU;         // Alt key
 const UCHAR ENTER_KEY = VK_RETURN;       // Enter key
-const UCHAR SHIP_LEFT_KEY = VK_LEFT;     // left arrow
-const UCHAR SHIP_RIGHT_KEY = VK_RIGHT;    // right arrow
-const UCHAR NEXT_LEVEL_KEY = VK_DOWN;       // up arrow
-const UCHAR LAUNCH_BALL_KEY = VK_UP;
+const UCHAR PLAYER_LEFT_KEY = VK_LEFT;     // left arrow
+const UCHAR PLAYER_RIGHT_KEY = VK_RIGHT;    // right arrow
+const UCHAR PLAYER_DOWN_KEY = VK_DOWN;       // up arrow
+const UCHAR PLAYER_UP_KEY = VK_UP;
 const UCHAR SPACE_KEY = VK_SPACE;     // down arrow
 
 #endif

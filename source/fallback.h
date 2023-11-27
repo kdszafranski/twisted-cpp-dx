@@ -43,6 +43,7 @@ private:
     std::vector<Level> levels;
     std::list<Image> racers;
     bool gameOver = false;
+    bool bIsMoving = false;
     bool hasPowerUp = false;
     bool ballResetting = false;
     bool titleLoading = false;

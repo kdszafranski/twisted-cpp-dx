@@ -158,31 +158,27 @@ void Player::resetSpeed()
 void Player::update(float frameTime)
 {
 	// move right
-	if (input->isKeyDown(SHIP_RIGHT_KEY)) {
+	if (input->isKeyDown(PLAYER_RIGHT_KEY)) {
 		spriteData.x += frameTime * currentSpeed;
+		spriteData.angle = 1.5708;
 	}
 
 	// move left
-	if (input->isKeyDown(SHIP_LEFT_KEY)) {
+	if (input->isKeyDown(PLAYER_LEFT_KEY)) {
 		spriteData.x -= frameTime * currentSpeed;
+		spriteData.angle = -1.5708;
 	}
 
-	if (canWrapEdge) {
-		const float halfWidth = spriteData.width / 2;
-		// right
-		if (spriteData.x > GAME_WIDTH) {
-			spriteData.x = 0;
-		} else if (spriteData.x < 0) {
-			// left
-			spriteData.x = GAME_WIDTH;
-		}
-	} else {
-		// keep it on the screen
-		if (spriteData.x > GAME_WIDTH - spriteData.width) {
-			spriteData.x = GAME_WIDTH - spriteData.width;    // position at right screen edge
-		} else if (spriteData.x < 0) {
-			spriteData.x = 0;                             // position at left screen edge
-		}
+	// move up
+	if (input->isKeyDown(PLAYER_UP_KEY)) {
+		spriteData.y -= frameTime * currentSpeed;
+		spriteData.angle = 0;
+	}
+	
+	// move down
+	if (input->isKeyDown(PLAYER_DOWN_KEY)) {
+		spriteData.y += frameTime * currentSpeed;
+		spriteData.angle = 3.14159;
 	}
 
 }

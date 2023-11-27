@@ -32,6 +32,7 @@ Fallback::Fallback()
 	fallingPowerUpPtr = NULL;
 	racerSpawnTimer = 0;
 	hasPowerUp = false;
+	bIsMoving = false;
 	powerUpTimer = 0;
 	titleLoadingTimer = 0;
 	titleLoading = false;
@@ -109,7 +110,7 @@ void Fallback::startNewGame()
 	resetGame();
 
 	// level numbers are 0-based... :/
-	loadLevel(currentLevel);
+	//loadLevel(currentLevel);
 
 	// play!
 	//restartBall();
@@ -345,19 +346,7 @@ void Fallback::loadLevelFiles() {
 
 void Fallback::startNextLevel()
 {
-	audio->playCue(NEXT_LEVEL);
-	currentLevel++;
-	if (currentLevel >= levels.size()) {
-		currentLevel = 0;
-	}
-
-	m_AnimationManager.clearAllProcesses();
-	racers.clear();
-	removePowerUp();
-	SAFE_DELETE(fallingPowerUpPtr);
-
-	loadLevel(currentLevel);
-	restartBall();
+	// nothing to see here
 }
 
 /// <summary>
@@ -506,7 +495,7 @@ void Fallback::update(float frameTime)
 			} // end game over
 
 			// always update effects
-			updateEffects(frameTime);
+			//updateEffects(frameTime);
 
 		} // isPaused
 
@@ -521,14 +510,6 @@ void Fallback::update(float frameTime)
 	// Always update the following
 	// every 5 seconds there is a chance to spawn racers
 	if (!isPaused) {
-		racerSpawnTimer += frameTime;
-		if (racerSpawnTimer > 5) {
-			spawnRacers();
-			racerSpawnTimer = 0;
-		}
-
-		// they run on all screens
-		cleanUpRacerList();
 	}
 
 	// check if we want to exit
@@ -567,42 +548,42 @@ void Fallback::updateGameScreen(float frameTime) {
 	player.update(frameTime);
 
 
-	if (ballResetting) {
-		// move ball with ship
-		ball.setPosition((player.getX() + player.getWidth() / 2) - ball.getWidth() / 2, player.getY() - ball.getHeight() - 1);
-		// allow input to launch
-		if (input->wasKeyPressed(LAUNCH_BALL_KEY)) {
-			launchBall();
-		}
-	} else {
-		ball.update(frameTime);
-	}
+	//if (ballResetting) {
+	//	// move ball with ship
+	//	ball.setPosition((player.getX() + player.getWidth() / 2) - ball.getWidth() / 2, player.getY() - ball.getHeight() - 1);
+	//	// allow input to launch
+	//	if (input->wasKeyPressed(PLAYER_UP_KEY)) {
+	//		launchBall();
+	//	}
+	//} else {
+	//	ball.update(frameTime);
+	//}
 
 	// handle power ups timer
-	if (hasPowerUp) {
-		powerUpTimer += frameTime;
-		if (powerUpTimer > POW_TIME_LIMIT) {
-			removePowerUp();
-		}
-	}
+	//if (hasPowerUp) {
+	//	powerUpTimer += frameTime;
+	//	if (powerUpTimer > POW_TIME_LIMIT) {
+	//		removePowerUp();
+	//	}
+	//}
 
 	// every interval adjust ball trail
-	timer += frameTime;
-	if (timer > BALLSHADOW_INTERVAL) {
-		recentBallPositions.push_back(VECTOR2(ball.getX(), ball.getY()));
+	//timer += frameTime;
+	//if (timer > BALLSHADOW_INTERVAL) {
+	//	recentBallPositions.push_back(VECTOR2(ball.getX(), ball.getY()));
 
-		if (recentBallPositions.size() > 5) {
-			// remove first
-			recentBallPositions.erase(recentBallPositions.begin());
-		}
-		timer = 0;
-	}
+	//	if (recentBallPositions.size() > 5) {
+	//		// remove first
+	//		recentBallPositions.erase(recentBallPositions.begin());
+	//	}
+	//	timer = 0;
+	//}
 
-	// check if the ball went off below ship
-	if (ball.getY() > GAME_HEIGHT) {
-		loseBall();
-		restartBall();
-	}
+	//// check if the ball went off below ship
+	//if (ball.getY() > GAME_HEIGHT) {
+	//	loseBall();
+	//	restartBall();
+	//}
 }
 
 void Fallback::updateGameOverScreen(float frameTime)
@@ -800,7 +781,7 @@ void Fallback::CheckCheatInput()
 {
 	if (currentScreen == GAME) {
 		// next level
-		if (input->wasKeyPressed(NEXT_LEVEL_KEY)) {
+		if (input->wasKeyPressed(PLAYER_DOWN_KEY)) {
 			startNextLevel();
 		}
 	}
@@ -1199,10 +1180,10 @@ void Fallback::renderGameScreen()
 	// always draw the following
 
 	// particles
-	explosionManager.draw();
+	//explosionManager.draw();
 
 	// UI
-	renderUI();
+	//renderUI();
 	console.renderLog();
 }
 
