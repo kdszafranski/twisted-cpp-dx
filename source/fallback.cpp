@@ -76,9 +76,6 @@ void Fallback::initialize(HWND hwnd)
 	// init the console log
 	console.initialize(graphics);
 
-	// load all levels from files on disk
-	loadLevelFiles();
-
 	// for testing
 	if (skipTitleScreen) {
 		startNewGame();
@@ -86,7 +83,7 @@ void Fallback::initialize(HWND hwnd)
 		setTitleScreen();
 	}
 
-	audio->playCue(MUSIC_LOOP);
+	//audio->playCue(MUSIC_LOOP);
 
 	return;
 }
@@ -115,7 +112,7 @@ void Fallback::startNewGame()
 	loadLevel(currentLevel);
 
 	// play!
-	restartBall();
+	//restartBall();
 }
 
 /// <summary>
@@ -161,7 +158,7 @@ void Fallback::initSprites() {
 	// misc graphics
 	initMessageSprites();
 	// create our game object and graphics
-	initShip();
+	initPlayerArrow();
 	// set up the blocks
 	initBlocks();
 	// ball sprites
@@ -224,26 +221,6 @@ void Fallback::initButtons()
 	newGameButton.setCurrentFrame(0);
 	newGameButton.setPosition(400 - newGameButton.getSpriteData().width / 2, 356);
 
-	if (!editorButton.initialize(this, 256, 64, 3, &buttonTexture))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing button image"));
-	}
-	editorButton.setCurrentFrame(2);
-	editorButton.setPosition(400 - editorButton.getSpriteData().width / 2, 432);
-
-	// credits
-	if (!creditsButton.initialize(this, 256, 64, 3, &buttonTexture))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing button image"));
-	}
-
-	creditsButton.setCurrentFrame(1);
-	creditsButton.setPosition(400 - creditsButton.getSpriteData().width / 2, 510);
-
-	// racers/details
-	if (!detailsTexture.initialize(graphics, RACER_PATH)) {
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing details texture"));
-	}
 }
 
 void Fallback::initMessageSprites()
@@ -266,22 +243,22 @@ void Fallback::initMessageSprites()
 }
 
 //=============================================================================
-// Ship texture and entity init
+// Player texture and entity init
 //=============================================================================
-void Fallback::initShip()
+void Fallback::initPlayerArrow()
 {
-	if (!shipTexture.initialize(graphics, SHIP_PATH)) {
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship texture"));
+	if (!shipTexture.initialize(graphics, PLAYER_PATH)) {
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
 	}
-	if (!ship.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &shipTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship entity"));
+	if (!ship.initialize(this, playerNS::WIDTH, playerNS::HEIGHT, playerNS::TEXTURE_COLS, &shipTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player entity"));
 
-	//ship.setFrames(shipNS::SHIP_START_FRAME, shipNS::SHIP_END_FRAME);
+	//ship.setFrames(playerNS::SHIP_START_FRAME, playerNS::SHIP_END_FRAME);
 	ship.setCurrentFrame(0);
 
 	// start center, near the bottom
-	ship.setX(GAME_WIDTH / 2 - shipNS::WIDTH / 2);
-	ship.setY(GAME_HEIGHT - 88);
+	ship.setX(GAME_WIDTH / 2 - playerNS::WIDTH / 2);
+	ship.setY(GAME_HEIGHT / 2 - playerNS::HEIGHT / 2);
 	ship.setVelocity(VECTOR2(0, 0)); // start standing still
 
 }
@@ -575,16 +552,6 @@ void Fallback::updateTitleScreen(float frameTime)
 		// over, allow clicks
 		if (input->getMouseLButton()) {
 			startNewGame();
-		}
-	}
-	if (editorButton.isMouseOver()) {
-		if (input->getMouseLButton()) {
-			launchEditor();
-		}
-	}
-	if (creditsButton.isMouseOver()) {
-		if (input->getMouseLButton()) {
-			console.setLogText("launch credits");
 		}
 	}
 
@@ -919,9 +886,6 @@ void Fallback::handleGameOver()
 void Fallback::restartBall()
 {
 	ballResetting = true;
-	ball.setActive(false);
-	ball.setPosition((ship.getX() + ship.getWidth() / 2) - ball.getWidth() / 2, ship.getY() - ball.getHeight() - 1);
-	ball.setVelocity(VECTOR2(0, 0));
 	recentBallPositions.clear();
 }
 
@@ -1138,17 +1102,9 @@ void Fallback::render()
 void Fallback::renderTitleScreen()
 {
 	backgroundImage.draw();
-	// racers behind UI
-	renderRacers();
+	newGameButton.draw();
 
 	titleImage.draw();
-
-	if (titleLoading == false) {
-		newGameButton.draw();
-		editorButton.draw();
-		creditsButton.draw();
-	}
-
 	console.renderLog();
 }
 

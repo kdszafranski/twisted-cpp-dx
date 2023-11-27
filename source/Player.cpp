@@ -5,46 +5,46 @@
 // Copyright (c) 2011 by: 
 // Charles Kelly
 
-#include "ship.h"
+#include "Player.h"
 
 //=============================================================================
 // default constructor
 //=============================================================================
-Ship::Ship() : Entity()
+Player::Player() : Entity()
 {
-	currentSpeed = shipNS::SPEED;
+	currentSpeed = playerNS::SPEED;
 	hasPowerUp = false;
 	canWrapEdge = false;
 
-	spriteData.width = shipNS::WIDTH;           // size of ship
-	spriteData.height = shipNS::HEIGHT;
-	spriteData.x = shipNS::X;                   // location on screen
-	spriteData.y = shipNS::Y;
-	spriteData.rect.bottom = shipNS::HEIGHT;    // rectangle to select parts of an image
-	spriteData.rect.right = shipNS::WIDTH;
+	spriteData.width = playerNS::WIDTH;           // size of ship
+	spriteData.height = playerNS::HEIGHT;
+	spriteData.x = playerNS::X;                   // location on screen
+	spriteData.y = playerNS::Y;
+	spriteData.rect.bottom = playerNS::HEIGHT;    // rectangle to select parts of an image
+	spriteData.rect.right = playerNS::WIDTH;
 
 	// set bounding box for BOX colliders
 	collisionType = entityNS::BOX;
-	edge.top = -shipNS::HEIGHT / 2;    // -16
-	edge.right = shipNS::WIDTH / 2;    // 64
-	edge.bottom = shipNS::HEIGHT / 2;  // 16
-	edge.left = -shipNS::WIDTH / 2;    // -64
+	edge.top = -playerNS::HEIGHT / 2;    // -16
+	edge.right = playerNS::WIDTH / 2;    // 64
+	edge.bottom = playerNS::HEIGHT / 2;  // 16
+	edge.left = -playerNS::WIDTH / 2;    // -64
 
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
-	frameDelay = shipNS::SHIP_ANIMATION_DELAY;
-	startFrame = shipNS::SHIP_START_FRAME;     // first frame of ship animation
-	endFrame = shipNS::SHIP_END_FRAME;     // last frame of ship animation
+	frameDelay = playerNS::SHIP_ANIMATION_DELAY;
+	startFrame = playerNS::SHIP_START_FRAME;     // first frame of ship animation
+	endFrame = playerNS::SHIP_END_FRAME;     // last frame of ship animation
 	currentFrame = startFrame;
-	radius = shipNS::WIDTH / 2.0;
-	mass = shipNS::MASS;
+	radius = playerNS::WIDTH / 2.0;
+	mass = playerNS::MASS;
 }
 
 //=============================================================================
-// Initialize the Ship.
+// Initialize the Player.
 // Post: returns true if successful, false if failed
 //=============================================================================
-bool Ship::initialize(Game* gamePtr, int width, int height, int ncols,
+bool Player::initialize(Game* gamePtr, int width, int height, int ncols,
 	TextureManager* textureM)
 {
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
@@ -53,7 +53,7 @@ bool Ship::initialize(Game* gamePtr, int width, int height, int ncols,
 //=============================================================================
 // draw the ship
 //=============================================================================
-void Ship::draw()
+void Player::draw()
 {
 	if (hasPowerUp) {
 		Image::draw(graphicsNS::FB_METAL);
@@ -65,7 +65,7 @@ void Ship::draw()
 //=============================================================================
 // apply the given power up
 //=============================================================================
-void Ship::applyPowerUp(POWERUP type)
+void Player::applyPowerUp(POWERUP type)
 {
 	// apply relevant power up
 	if (type == FAST) {
@@ -81,12 +81,12 @@ void Ship::applyPowerUp(POWERUP type)
 	hasPowerUp = true;
 }
 
-void Ship::removePowerUp()
+void Player::removePowerUp()
 {
 	hasPowerUp = false;
 }
 
-void Ship::removeWrapAround() {
+void Player::removeWrapAround() {
 	canWrapEdge = false;
 	resetSpeed();
 };
@@ -95,7 +95,7 @@ void Ship::removeWrapAround() {
 /// <summary>
 /// Callback from animation process when animation is complete
 /// </summary>
-void Ship::onAnimationSuccess()
+void Player::onAnimationSuccess()
 {
 	if (spriteData.xScale > 1) {
 		// is now big
@@ -113,7 +113,7 @@ void Ship::onAnimationSuccess()
 //=============================================================================
 // adjust spriteData and collider bounds
 //=============================================================================
-void Ship::grow()
+void Player::grow()
 {
 	spriteData.width = 192;
 	edge.right = spriteData.width / 2;    // 96
@@ -124,7 +124,7 @@ void Ship::grow()
 //=============================================================================
 // Adjust spriteData and collider bounds
 //=============================================================================
-void Ship::shrink()
+void Player::shrink()
 {
 	spriteData.width = 64;
 	edge.right = spriteData.width / 2;    // 32
@@ -132,9 +132,9 @@ void Ship::shrink()
 	hasPowerUp = true;
 }
 
-void Ship::resetSize()
+void Player::resetSize()
 {
-	spriteData.width = shipNS::WIDTH;
+	spriteData.width = playerNS::WIDTH;
 	edge.right = spriteData.width / 2;    // 64
 	edge.left = -spriteData.width / 2;
 	removePowerUp();
@@ -143,9 +143,9 @@ void Ship::resetSize()
 /// <summary>
 /// Resets ship speed and turns power ups to false
 /// </summary>
-void Ship::resetSpeed()
+void Player::resetSpeed()
 {
-	currentSpeed = shipNS::SPEED;
+	currentSpeed = playerNS::SPEED;
 	removePowerUp();
 }
 
@@ -155,7 +155,7 @@ void Ship::resetSpeed()
 // typically called once per frame
 // frameTime is used to regulate the speed of movement and animation
 //=============================================================================
-void Ship::update(float frameTime)
+void Player::update(float frameTime)
 {
 	// move right
 	if (input->isKeyDown(SHIP_RIGHT_KEY)) {

@@ -14,7 +14,7 @@
 #include <list>
 #include "textureManager.h"
 #include "image.h"
-#include "ship.h"
+#include "Player.h"
 #include "ball.h"
 #include "block.h"
 #include "textDX.h"
@@ -93,7 +93,7 @@ private:
     std::vector<VECTOR2> recentBallPositions;
 
     // sprites
-    Ship ship;
+    Player ship;
     Ball ball;
     Block block;
 
@@ -154,7 +154,7 @@ public:
     void initBackgrounds();
     void initButtons();
     void initSprites();
-    void initShip();
+    void initPlayerArrow();
     void initBall();
     void initUI();
     void initBlocks();
