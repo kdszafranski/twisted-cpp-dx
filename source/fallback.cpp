@@ -250,16 +250,16 @@ void Fallback::initPlayerArrow()
 	if (!shipTexture.initialize(graphics, PLAYER_PATH)) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
 	}
-	if (!ship.initialize(this, playerNS::WIDTH, playerNS::HEIGHT, playerNS::TEXTURE_COLS, &shipTexture))
+	if (!player.initialize(this, playerNS::WIDTH, playerNS::HEIGHT, playerNS::TEXTURE_COLS, &shipTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player entity"));
 
 	//ship.setFrames(playerNS::SHIP_START_FRAME, playerNS::SHIP_END_FRAME);
-	ship.setCurrentFrame(0);
+	player.setCurrentFrame(0);
 
 	// start center, near the bottom
-	ship.setX(GAME_WIDTH / 2 - playerNS::WIDTH / 2);
-	ship.setY(GAME_HEIGHT / 2 - playerNS::HEIGHT / 2);
-	ship.setVelocity(VECTOR2(0, 0)); // start standing still
+	player.setX(GAME_WIDTH / 2 - playerNS::WIDTH / 2);
+	player.setY(GAME_HEIGHT / 2 - playerNS::HEIGHT / 2);
+	player.setVelocity(VECTOR2(0, 0)); // start standing still
 
 }
 
@@ -564,12 +564,12 @@ void Fallback::updateTitleScreen(float frameTime)
 void Fallback::updateGameScreen(float frameTime) {
 
 
-	ship.update(frameTime);
+	player.update(frameTime);
 
 
 	if (ballResetting) {
 		// move ball with ship
-		ball.setPosition((ship.getX() + ship.getWidth() / 2) - ball.getWidth() / 2, ship.getY() - ball.getHeight() - 1);
+		ball.setPosition((player.getX() + player.getWidth() / 2) - ball.getWidth() / 2, player.getY() - ball.getHeight() - 1);
 		// allow input to launch
 		if (input->wasKeyPressed(LAUNCH_BALL_KEY)) {
 			launchBall();
@@ -728,20 +728,20 @@ void Fallback::applyPowerUp()
 	switch (currentPowerUp) {
 		case ZOOM:
 			ball.applyPowerUp(currentPowerUp);
-			ship.applyPowerUp(currentPowerUp);
+			player.applyPowerUp(currentPowerUp);
 			break;
 		case SLOW: // slow ball
 			ball.applyPowerUp(currentPowerUp);
 		case FAST: // same as below
 		case WARP:
-			ship.applyPowerUp(currentPowerUp);
+			player.applyPowerUp(currentPowerUp);
 			break;
 		case GROW:
-			anim = std::make_shared<ScaleXTo>(&ship, 0.5f, 1.5f);
+			anim = std::make_shared<ScaleXTo>(&player, 0.5f, 1.5f);
 			m_AnimationManager.attachProcess(anim);
 			break;
 		case TINY:
-			anim = std::make_shared<ScaleXTo>(&ship, 0.5f, 0.5f);
+			anim = std::make_shared<ScaleXTo>(&player, 0.5f, 0.5f);
 			m_AnimationManager.attachProcess(anim);
 			break;
 	}
@@ -763,16 +763,16 @@ void Fallback::removePowerUp()
 			case SLOW: // ball speed
 				ball.removePowerUp();
 			case FAST: // ship speed
-				ship.resetSpeed();
+				player.resetSpeed();
 				break;
 			case WARP:
-				ship.removeWrapAround();
+				player.removeWrapAround();
 				break;
 				// allow end of power up animations
 			case GROW: // same as below
 			case TINY:
 				// animate to normal width
-				StrongAnimationPtr reset = std::make_shared<ScaleXTo>(&ship, 0.5, 1.0f);
+				StrongAnimationPtr reset = std::make_shared<ScaleXTo>(&player, 0.5, 1.0f);
 				m_AnimationManager.attachProcess(reset);
 				break;
 		}
@@ -855,7 +855,7 @@ void Fallback::loseBall()
 void Fallback::shakeScreen()
 {
 	Vector2 shakeLimits = { 10.0f, 10.0f };
-	StrongAnimationPtr shipShake = std::make_shared<Shake>(&ship, 0.5, shakeLimits);
+	StrongAnimationPtr shipShake = std::make_shared<Shake>(&player, 0.5, shakeLimits);
 	m_AnimationManager.attachProcess(shipShake);
 	StrongAnimationPtr bgShake = std::make_shared<Shake>(&backgroundImage, 0.5, shakeLimits);
 	m_AnimationManager.attachProcess(bgShake);
@@ -875,9 +875,9 @@ void Fallback::handleGameOver()
 	m_AnimationManager.attachProcess(animPtr);
 
 	// blow up the ship
-	explosionManager.spawnExplosion(this, &iconTexture, { ship.getX() + 15, ship.getCenterY() });
-	explosionManager.spawnExplosion(this, &iconTexture, { ship.getX() + ship.getWidth() - 15, ship.getCenterY() });
-	explosionManager.spawnExplosion(this, &iconTexture, { ship.getX() + ship.getCenterX(), ship.getCenterY() });
+	explosionManager.spawnExplosion(this, &iconTexture, { player.getX() + 15, player.getCenterY() });
+	explosionManager.spawnExplosion(this, &iconTexture, { player.getX() + player.getWidth() - 15, player.getCenterY() });
+	explosionManager.spawnExplosion(this, &iconTexture, { player.getX() + player.getCenterX(), player.getCenterY() });
 }
 
 //=============================================================================
@@ -914,8 +914,8 @@ void Fallback::collisions()
 	if (!isPaused) {
 
 		// if collision between ball and ship
-		if (ball.collidesWith(ship, collisionVector)) {
-			ball.bounceOffShip(collisionVector, collisionPosition, ship.getSpriteData());
+		if (ball.collidesWith(player, collisionVector)) {
+			ball.bounceOffShip(collisionVector, collisionPosition, player.getSpriteData());
 			audio->playCue(BOUNCE_SHIP);
 			ball.bumpSpeedUp();
 		}
@@ -923,7 +923,7 @@ void Fallback::collisions()
 		// active power up collides with ship
 		if (fallingPowerUpPtr) {
 			// fallingPowerUpPtr is a ptr so dereference with *fallingPowerUpPtr
-			if (ship.collidesWith(*fallingPowerUpPtr, collisionVector)) {
+			if (player.collidesWith(*fallingPowerUpPtr, collisionVector)) {
 				applyPowerUp();
 				score += POWERUP_POINT_VALUE;
 
@@ -1188,44 +1188,18 @@ void Fallback::renderGameScreen()
 {
 	backgroundImage.draw();
 
-	renderRacers();
-
 	if (gameOver) {
 		// show message
 		gameOverImage.draw();
 	} else {
 		// only draw these when playing
-		ship.draw();
-
-		for (int i = recentBallPositions.size() - 1; i > -1; i--) {
-			shadowBallImage.setPosition(
-				recentBallPositions.at(i).x,
-				recentBallPositions.at(i).y
-			);
-			if (i > 0) { // leaves the last 2 the same size
-				shadowBallImage.setScale(i * 0.23);
-			}
-			shadowBallImage.draw(graphicsNS::WHITE & graphicsNS::ALPHA50, true); // ??
-		}
-
-		ball.draw();
-
+		player.draw();
 	}
 
 	// always draw the following
 
-	// render all blocks
-	for (int i = 0; i < blocks.size(); i++) {
-		blocks.at(i).draw();
-	}
-
 	// particles
 	explosionManager.draw();
-
-	// power up
-	if (fallingPowerUpPtr) {
-		fallingPowerUpPtr->draw();
-	}
 
 	// UI
 	renderUI();

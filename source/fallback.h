@@ -93,7 +93,7 @@ private:
     std::vector<VECTOR2> recentBallPositions;
 
     // sprites
-    Player ship;
+    Player player;
     Ball ball;
     Block block;
 

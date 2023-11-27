@@ -16,7 +16,7 @@ Player::Player() : Entity()
 	hasPowerUp = false;
 	canWrapEdge = false;
 
-	spriteData.width = playerNS::WIDTH;           // size of ship
+	spriteData.width = playerNS::WIDTH;           // size of player
 	spriteData.height = playerNS::HEIGHT;
 	spriteData.x = playerNS::X;                   // location on screen
 	spriteData.y = playerNS::Y;
@@ -33,8 +33,8 @@ Player::Player() : Entity()
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
 	frameDelay = playerNS::SHIP_ANIMATION_DELAY;
-	startFrame = playerNS::SHIP_START_FRAME;     // first frame of ship animation
-	endFrame = playerNS::SHIP_END_FRAME;     // last frame of ship animation
+	startFrame = playerNS::SHIP_START_FRAME;     // first frame of player animation
+	endFrame = playerNS::SHIP_END_FRAME;     // last frame of player animation
 	currentFrame = startFrame;
 	radius = playerNS::WIDTH / 2.0;
 	mass = playerNS::MASS;
