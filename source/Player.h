@@ -35,6 +35,8 @@ private:
     bool canWrapEdge;
 
 public:
+
+    PLAYERMOVE_DIR moveDirection;
     // constructor
     Player();
 

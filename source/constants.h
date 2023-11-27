@@ -73,6 +73,9 @@ enum WEAPON { TORPEDO, SHIP, PLANET, BALL };
 enum BLOCK { WEAK, STRONG, HARD, METAL, INVINCIBLE, NONE };
 // screen states
 enum SCREEN { TITLE, GAME, EDITOR, CREDITS };
+// player movement direction
+enum PLAYERMOVE_DIR { NOT_MOVING, UP, RIGHT, DOWN, LEFT };
+
 // Powerups
 // Slow - slows ball x
 // WRAP - allows ship to wrap around to the other side

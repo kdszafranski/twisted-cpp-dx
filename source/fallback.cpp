@@ -547,6 +547,20 @@ void Fallback::updateGameScreen(float frameTime) {
 
 	player.update(frameTime);
 
+	switch (player.moveDirection) {
+		case UP:
+			backgroundImage.setY(backgroundImage.getY() + 1);
+			break;
+		case RIGHT:
+			backgroundImage.setX(backgroundImage.getX() - 1);
+			break;
+		case DOWN:
+			backgroundImage.setY(backgroundImage.getY() - 1);
+			break;
+		case LEFT:
+			backgroundImage.setX(backgroundImage.getX() + 1);
+			break;
+	}
 
 	//if (ballResetting) {
 	//	// move ball with ship

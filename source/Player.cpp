@@ -13,6 +13,7 @@
 Player::Player() : Entity()
 {
 	currentSpeed = playerNS::SPEED;
+	moveDirection = NOT_MOVING;
 	hasPowerUp = false;
 	canWrapEdge = false;
 
@@ -157,28 +158,32 @@ void Player::resetSpeed()
 //=============================================================================
 void Player::update(float frameTime)
 {
-	// move right
-	if (input->isKeyDown(PLAYER_RIGHT_KEY)) {
-		spriteData.x += frameTime * currentSpeed;
-		spriteData.angle = 1.5708;
-	}
-
-	// move left
-	if (input->isKeyDown(PLAYER_LEFT_KEY)) {
-		spriteData.x -= frameTime * currentSpeed;
-		spriteData.angle = -1.5708;
-	}
-
 	// move up
 	if (input->isKeyDown(PLAYER_UP_KEY)) {
-		spriteData.y -= frameTime * currentSpeed;
+		//spriteData.y -= frameTime * currentSpeed;
 		spriteData.angle = 0;
+		moveDirection = UP;
 	}
 	
+	// move right
+	if (input->isKeyDown(PLAYER_RIGHT_KEY)) {
+		//spriteData.x += frameTime * currentSpeed;
+		spriteData.angle = 1.5708;
+		moveDirection = RIGHT;
+	}
+
 	// move down
 	if (input->isKeyDown(PLAYER_DOWN_KEY)) {
-		spriteData.y += frameTime * currentSpeed;
+		//spriteData.y += frameTime * currentSpeed;
 		spriteData.angle = 3.14159;
+		moveDirection = DOWN;
+	}
+	
+	// move left
+	if (input->isKeyDown(PLAYER_LEFT_KEY)) {
+		//spriteData.x -= frameTime * currentSpeed;
+		spriteData.angle = -1.5708;
+		moveDirection = LEFT;
 	}
 
 }
