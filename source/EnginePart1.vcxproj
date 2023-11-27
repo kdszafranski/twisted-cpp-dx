@@ -176,6 +176,7 @@
     <Text Include="Level0.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.gitattributes" />
     <None Include="..\.gitignore" />
     <None Include="..\docs\ClassDiagram1.cd" />
     <None Include="..\README.md" />

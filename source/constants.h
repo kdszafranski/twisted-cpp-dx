@@ -38,15 +38,15 @@ struct Vector2 {
 //=============================================================================
 
 // graphic files
-const char BG_PATH[] = "pictures\\bg-sprites.jpg";
-const char TITLE_PATH[] = "pictures\\fallback-title.png";
-const char GAME_OVER_PATH[] = "pictures\\game-over-msg.png";
-const char ICONS_PATH[] = "pictures\\ui-icons.png";
-const char SHIP_PATH[] = "pictures\\ship.png";
-const char RACER_PATH[] = "pictures\\racers.png";
-const char BLOCK_PATH[] = "pictures\\blocks.png";
-const char NG_BUTTON_PATH[] = "pictures\\buttons.png";
-const char POWERUP_PATH[] = "pictures\\powerup-letters.png";
+const char BG_PATH[] = "images\\bg-sprites.jpg";
+const char TITLE_PATH[] = "images\\fallback-title.png";
+const char GAME_OVER_PATH[] = "images\\game-over-msg.png";
+const char ICONS_PATH[] = "images\\ui-icons.png";
+const char SHIP_PATH[] = "images\\ship.png";
+const char RACER_PATH[] = "images\\racers.png";
+const char BLOCK_PATH[] = "images\\blocks.png";
+const char NG_BUTTON_PATH[] = "images\\buttons.png";
+const char POWERUP_PATH[] = "images\\powerup-letters.png";
 
 
 // window
