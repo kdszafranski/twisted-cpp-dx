@@ -164,7 +164,7 @@ void Fallback::initSprites() {
 	// create our game object and graphics
 	initPlayerArrow();
 	// set up the blocks
-	initBlocks();
+	initFloor();
 	// ball sprites
 	initBall();
 	// ui/hud
@@ -330,21 +330,21 @@ void Fallback::initUI()
 //=============================================================================
 // Initialize block texture/images
 //=============================================================================
-void Fallback::initBlocks()
+void Fallback::initFloor()
 {
-	// load our texture, reuse it for all block Entities
-	if (!blockTexture.initialize(graphics, BLOCK_PATH))
+	// load our texture, reuse it for all Floor Entities
+	if (!floorTexture.initialize(graphics, TILE_PATH))
 	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block texture"));
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Floor texture"));
 	}
 }
 
 void Fallback::loadLevelFiles() {
 	levels.clear();
-	loadLevelFromFile(0); // Editor default
-	loadLevelFromFile(1);
-	loadLevelFromFile(2);
-	loadLevelFromFile(3);
+	//loadLevelFromFile(0); // Editor default
+	//loadLevelFromFile(1);
+	//loadLevelFromFile(2);
+	//loadLevelFromFile(3);
 }
 
 void Fallback::startNextLevel()
@@ -376,9 +376,9 @@ void Fallback::loadLevel(int levelNumber)
 			if (levels.at(levelNumber).data.at(i * COLS + j) == NONE) {
 				// skip
 			} else {
-				Block newBlock(levels.at(levelNumber).data.at(i * COLS + j));
+				Block newBlock;
 
-				if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &blockTexture))
+				if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &floorTexture))
 				{
 					throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
 				}
@@ -418,11 +418,9 @@ void Fallback::loadRandomLevel()
 		int x = START_X;
 		for (int j = 0; j < COLS; j++) {
 
-			// rand() with % is 0-n exclusive 
-			BLOCK t = static_cast<BLOCK>((rand() % 5));
-			Block newBlock(t);
+			Block newBlock;
 
-			if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &blockTexture))
+			if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &floorTexture))
 			{
 				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
 			}
@@ -912,27 +910,6 @@ void Fallback::collisions()
 
 	if (!isPaused) {
 
-		// if collision between ball and ship
-		if (ball.collidesWith(player, collisionVector)) {
-			ball.bounceOffShip(collisionVector, collisionPosition, player.getSpriteData());
-			audio->playCue(BOUNCE_SHIP);
-			ball.bumpSpeedUp();
-		}
-
-		// active power up collides with ship
-		if (fallingPowerUpPtr) {
-			// fallingPowerUpPtr is a ptr so dereference with *fallingPowerUpPtr
-			if (player.collidesWith(*fallingPowerUpPtr, collisionVector)) {
-				applyPowerUp();
-				score += POWERUP_POINT_VALUE;
-
-				explosionManager.spawnExplosion(this, &iconTexture, { fallingPowerUpPtr->getX(), fallingPowerUpPtr->getY() });
-
-				// remove power up entity
-				SAFE_DELETE(fallingPowerUpPtr);
-			}
-		}
-
 		// collision ball with block
 		bool hitThisFrame = false;
 		for (int i = 0; i < blocks.size(); i++) {
@@ -950,57 +927,7 @@ void Fallback::collisions()
 				hitThisFrame = true;
 				
 				ball.bounce(collisionVector, block->getSpriteData(), direction);
-
-				// reduce health if possible
-				if (block->getBlockType() != INVINCIBLE) {
-					// check if ball is dead
-					block->damage(BALL);
-					if (block->getHealth() <= 0) {
-						score += block->getPointValue() * 2; // double for destroying the block
-						removeBlock(i);
-					} else {
-						audio->playCue(CLUNK);
-						score += block->getPointValue();
-						// fire off animation process
-						block->setIsAnimating(true);
-						StrongAnimationPtr pinch = std::make_shared<PinchScale>(&blocks.at(i), 0.10f, 0.80f);
-						m_AnimationManager.attachProcess(pinch);
-					}
-				} else {
-					// invincible!
-					ball.bumpSpeedUp();
-
-					// bounce Block away from ball
-					Vector2 end = block->getPosition();
-					switch (direction) {
-						case 1:
-							// go down
-							end.y += 3.0f;
-							break;
-						case 2: // go left
-							end.x -= 3.0f;
-							break;
-						case 3: // go up
-							end.y -= 3.0f;
-							break;
-						case 4: // go right
-							end.x += 3.0f;
-							break;
-						default: // 0 up
-							end.y -= 3.0f;
-					}
-					// reset just in case
-					block->setCurrentFrame(0);
-
-					block->setIsAnimating(true);
-					StrongAnimationPtr bounce = std::make_shared<DirectionBounce>(&blocks.at(i), 0.15f, end);
-					m_AnimationManager.attachProcess(bounce);
-					// set filled color, animation will reset when complete
-					block->setCurrentFrame(1);
-
-					audio->playCue(CLICK);
-				}
-
+				
 				if (hitThisFrame) {
 					break; // exit loop since we already hit a block
 				}
@@ -1045,26 +972,7 @@ void Fallback::removeBlock(int index)
 
 void Fallback::checkGameOver()
 {
-	bool isFinished = false;
-	int invincibleCount = 0;
-	if (blocks.size() <= 0) {
-		isFinished = true;
-	} else {
-		for (int i = 0; i < blocks.size(); i++) {
-			// check each block, as soon as there is a normal block we can stop
-			if (blocks.at(i).getBlockType() == INVINCIBLE) {
-				invincibleCount++;
-			} else {
-				return;
-			}
-		}
-
-	}
-
-	// we're done here, next please!
-	if (isFinished || blocks.size() == invincibleCount) {
-		startNextLevel();
-	}
+	return;
 }
 
 //=============================================================================
@@ -1164,13 +1072,13 @@ void Fallback::setTitleScreen()
 
 void Fallback::launchEditor()
 {
-	if (!blockTexture.getTexture()) {
-		initBlocks();
+	if (!floorTexture.getTexture()) {
+		initFloor();
 	}
 
 	// share our stuff
 	if (editor->initialized == false) {
-		if (editor->initialize(this, &buttonTexture, &blockTexture, &console)) {
+		if (editor->initialize(this, &buttonTexture, &floorTexture, &console)) {
 			// TODO handle error
 		}
 	}
@@ -1285,7 +1193,7 @@ void Fallback::exitEditor()
 {
 	// clean up
 	console.setLogText("");
-	loadLevelFiles();
+	//loadLevelFiles();
 	setTitleScreen();
 }
 
@@ -1299,7 +1207,7 @@ void Fallback::releaseAll()
 	titleTexture.onLostDevice();
 	iconTexture.onLostDevice();
 	shipTexture.onLostDevice();
-	blockTexture.onLostDevice();
+	floorTexture.onLostDevice();
 	buttonTexture.onLostDevice();
 	gameOverTexture.onLostDevice();
 	detailsTexture.onLostDevice();
@@ -1323,7 +1231,7 @@ void Fallback::resetAll()
 	iconTexture.onResetDevice();
 	shipTexture.onResetDevice();
 	detailsTexture.onResetDevice();
-	blockTexture.onResetDevice();
+	floorTexture.onResetDevice();
 	buttonTexture.onResetDevice();
 	gameOverTexture.onResetDevice();
 

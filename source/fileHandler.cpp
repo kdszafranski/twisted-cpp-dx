@@ -39,7 +39,7 @@ bool FileHandler::loadLevelFromFile(Level &lRef, int levelNumber) {
             }
             const int blockInt = ch - '0'; // this produces the ASCII value of the int we want
             const BLOCK t = static_cast<BLOCK>(blockInt);
-            Block newBlock(t);
+            Block newBlock;
             lRef.data.push_back(t);
         }
 

@@ -10,13 +10,8 @@
 //=============================================================================
 // default constructor
 //=============================================================================
-Block::Block(BLOCK type) : Entity()
+Block::Block() : Entity()
 {
-    // set values based on given type
-    blockType = type;
-    health = type + 1;
-    pointValue = blockNS::BLOCK_VALUE;
-
     spriteData.width = blockNS::WIDTH;           // size of Ball
     spriteData.height = blockNS::HEIGHT;
     spriteData.x = blockNS::X;                   // location on screen
@@ -24,10 +19,10 @@ Block::Block(BLOCK type) : Entity()
 
     // set bounding box for BOX collider
     collisionType = entityNS::BOX;      // override's Image default to CIRCLE
-    edge.top = -blockNS::HEIGHT / 2;     // -32
-    edge.right = blockNS::WIDTH / 2;     // 32
-    edge.bottom = blockNS::HEIGHT / 2;   // 32
-    edge.left = -blockNS::WIDTH / 2;     // -32
+    edge.top = -blockNS::HEIGHT / 2;     // -16
+    edge.right = blockNS::WIDTH / 2;     // 16
+    edge.bottom = blockNS::HEIGHT / 2;   // 16
+    edge.left = -blockNS::WIDTH / 2;     // -16
 
     velocity.x = 0;                             // velocity X
     velocity.y = 0;                             // velocity Y
@@ -44,10 +39,6 @@ Block::Block(BLOCK type) : Entity()
     isAnimating = false;
     originalScale = 1.0f;
     animScale = 1.0f;
-
-    // set color based on type of block
-    setBlockColorByType();
-
 }
 
 //=============================================================================
@@ -69,49 +60,11 @@ void Block::draw()
     Image::draw(0, true);
 }
 
-//=============================================================================
-// damage
-//=============================================================================
-void Block::damage(WEAPON weapon)
-{
-    if (weapon == BALL) {
-        health = health - 1;
-        if (health > 0) {
-            // shift my type down
-            blockType = static_cast<BLOCK>(blockType - 1);
-            setBlockColorByType(); // update my color
-        }
-    }
-}
-
 /// <summary>
 /// Callback from Animation so we can unlock collisions
 /// </summary>
 void Block::onAnimationSuccess()
 {
     isAnimating = false;
-}
-
-void Block::setBlockColorByType()
-{
-    switch (blockType) {
-        case WEAK:
-            color = graphicsNS::FB_WEAK;
-            break;
-        case STRONG:
-            color = graphicsNS::FB_STRONG;
-            break;
-        case HARD:
-            color = graphicsNS::FB_HARD;
-            break;
-        case METAL:
-            color = graphicsNS::FB_METAL;
-            break;
-        case INVINCIBLE:
-            color = graphicsNS::FB_INVINCIBLE;
-            break;
-        }
-
-    colorFilter = color;
 }
 

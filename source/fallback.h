@@ -71,7 +71,7 @@ private:
     TextureManager iconTexture;
     TextureManager shipTexture;
     TextureManager detailsTexture;
-    TextureManager blockTexture;
+    TextureManager floorTexture;
     TextureManager buttonTexture;
     TextureManager gameOverTexture;
     TextureManager powerUpTexture;
@@ -158,7 +158,7 @@ public:
     void initPlayerArrow();
     void initBall();
     void initUI();
-    void initBlocks();
+    void initFloor();
     void initMessageSprites();
     void setTitleScreen();
     void setGameScreen();

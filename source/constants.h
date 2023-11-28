@@ -44,14 +44,14 @@ const char GAME_OVER_PATH[] = "images\\game-over-msg.png";
 const char ICONS_PATH[] = "images\\ui-icons.png";
 const char PLAYER_PATH[] = "images\\Playerarrow.png";
 const char RACER_PATH[] = "images\\racers.png";
-const char BLOCK_PATH[] = "images\\blocks.png";
+const char TILE_PATH[] = "images\\Floor.png";
 const char NG_BUTTON_PATH[] = "images\\buttons.png";
 const char POWERUP_PATH[] = "images\\powerup-letters.png";
 
 
 // window
-const char CLASS_NAME[] = "Breakout";
-const char GAME_TITLE[] = "FALLBACK";
+const char CLASS_NAME[] = "Fallback";
+const char GAME_TITLE[] = "TWISTED TUNNELS";
 const bool FULLSCREEN = false;              // windowed or fullscreen
 const UINT GAME_WIDTH =  800;               // width of game in pixels
 const UINT GAME_HEIGHT = 600;               // height of game in pixels
