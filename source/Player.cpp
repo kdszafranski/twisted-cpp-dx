@@ -41,6 +41,14 @@ Player::Player() : Entity()
 	mass = playerNS::MASS;
 }
 
+void Player::Reset()
+{
+	moveDirection = NOT_MOVING;
+	spriteData.angle = 0;
+	hasPowerUp = false;
+	canWrapEdge = false;
+}
+
 //=============================================================================
 // Initialize the Player.
 // Post: returns true if successful, false if failed

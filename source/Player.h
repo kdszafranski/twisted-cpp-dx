@@ -44,6 +44,8 @@ public:
     virtual void draw();
     virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
                             TextureManager *textureM);
+    // reset new game state
+    void Reset();
     void update(float frameTime);
 
     // power ups

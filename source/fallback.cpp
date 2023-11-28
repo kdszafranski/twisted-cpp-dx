@@ -259,9 +259,10 @@ void Fallback::initPlayerArrow()
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player entity"));
 
 	//ship.setFrames(playerNS::SHIP_START_FRAME, playerNS::SHIP_END_FRAME);
+	player.Reset();
 	player.setCurrentFrame(0);
 
-	// start center, near the bottom
+	// start center
 	player.setX(GAME_WIDTH / 2 - playerNS::WIDTH / 2);
 	player.setY(GAME_HEIGHT / 2 - playerNS::HEIGHT / 2);
 	player.setVelocity(VECTOR2(0, 0)); // start standing still
@@ -405,8 +406,8 @@ void Fallback::loadLevel(int levelNumber)
 /// </summary>
 void Fallback::loadRandomLevel()
 {
-	const int START_X = player.getX();
-	const int START_Y = player.getY();
+	const int START_X = 400 - blockNS::WIDTH / 2;
+	const int START_Y = 300 - blockNS::HEIGHT / 2;
 
 	blocks.clear();
 
@@ -425,7 +426,6 @@ void Fallback::loadRandomLevel()
 
 		// add to vector
 		blocks.push_back(newBlock);
-
 
 		// set new row downward
 		y -= blockNS::HEIGHT;
@@ -1178,7 +1178,7 @@ void Fallback::CheckForExit() {
 			case GAME:
 				exitGame();
 				// faster for testing
-				PostQuitMessage(0);
+				//PostQuitMessage(0);
 				break;
 			case EDITOR:
 				exitEditor();
