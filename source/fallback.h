@@ -188,6 +188,9 @@ public:
     bool loadLevelFromFile(int n);
 
 
+    // maze gen methods
+    Vector2 MakeStraightaway(int distance, PLAYERMOVE_DIR direction, float x, float y);
+
     // helper to handle exit inputs
     void CheckForExit(); 
     // helper to handle pause input

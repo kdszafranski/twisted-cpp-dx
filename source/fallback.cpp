@@ -419,28 +419,14 @@ void Fallback::loadRandomLevel()
 {
 	const int START_X = GAME_WIDTH / 2 - blockNS::WIDTH / 2;
 	const int START_Y = GAME_HEIGHT / 2 - blockNS::HEIGHT / 2;
+	Vector2 currentPosition = { START_X, START_Y };
 
 	blocks.clear();
 
-	int y = START_Y;
-	int x = START_X;
-	for (int i = 0; i < 10; i++) {
-		Block newBlock;
-
-		if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &floorTexture))
-		{
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
-		}
-
-		newBlock.setPosition(x, y);
-		newBlock.setVelocity(VECTOR2(0, 0));
-
-		// add to vector
-		blocks.push_back(newBlock);
-
-		// set new row downward
-		y -= blockNS::HEIGHT;
-	}
+	currentPosition = MakeStraightaway(8, UP, currentPosition.x, currentPosition.y);
+	currentPosition = MakeStraightaway(4, RIGHT, currentPosition.x, currentPosition.y);
+	currentPosition = MakeStraightaway(6, DOWN, currentPosition.x, currentPosition.y);
+	
 }
 
 //=============================================================================
@@ -1175,6 +1161,45 @@ COLOR_ARGB Fallback::getBallCountColor()
 	}
 
 	return graphicsNS::WHITE;
+}
+
+Vector2 Fallback::MakeStraightaway(int distance, PLAYERMOVE_DIR direction, float startX, float startY)
+{
+	float x = startX;
+	float y = startY;
+
+	for (int i = 0; i < distance; i++) {
+		Block newBlock;
+
+		if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &floorTexture))
+		{
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
+		}
+
+		newBlock.setPosition(x, y);
+		newBlock.setVelocity(VECTOR2(0, 0));
+
+		// add to vector
+		blocks.push_back(newBlock);
+
+		// set next position
+		switch (direction) {
+			case UP:
+				y -= blockNS::HEIGHT;
+				break;
+			case DOWN:
+				y += blockNS::HEIGHT;
+				break;
+			case RIGHT:
+				x += blockNS::WIDTH;
+				break;
+			case LEFT:
+				x -= blockNS::WIDTH;
+				break;
+		}
+	}
+
+	return { x, y };
 }
 
 //=============================================================================
