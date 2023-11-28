@@ -15,7 +15,7 @@ WeakAnimationPtr AnimationManager::attachProcess(StrongAnimationPtr anim)
 unsigned int AnimationManager::updateProcesses(float deltaMs)
 {
 	unsigned int successCount = 0;
-	unsigned int faileCount = 0;
+	unsigned int failedCount = 0;
 
 	AnimationList::iterator it = mAnimationList.begin();
 
@@ -47,7 +47,7 @@ unsigned int AnimationManager::updateProcesses(float deltaMs)
 				break;
 			case AnimationBase::FAILED:
 				current->onFail();
-				++faileCount;
+				++failedCount;
 				break;
 			} // end switch
 
@@ -57,7 +57,7 @@ unsigned int AnimationManager::updateProcesses(float deltaMs)
 
 	} // end while
 
-	return ((successCount << 16 | faileCount));
+	return ((successCount << 16 | failedCount));
 }
 
 void AnimationManager::abortAllProcesses(bool immediate)
