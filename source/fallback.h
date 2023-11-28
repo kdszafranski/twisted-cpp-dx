@@ -117,6 +117,8 @@ public:
     void update(float frameTime);      // must override pure virtual from Game
     void updateTitleScreen(float frameTime);
     void updateGameScreen(float frameTime);
+    void updateFloorTiles(float frameTime, PLAYERMOVE_DIR pDir);
+
     void updateGameOverScreen(float frameTime);
     // update extraneous elements
     void updateEffects(float frameTime);

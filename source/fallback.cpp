@@ -407,9 +407,7 @@ void Fallback::loadRandomLevel()
 	const int START_Y = player.getY();
 
 	blocks.clear();
-	blocks.reserve(21);
 
-	srand((unsigned)time(0));
 	int y = START_Y;
 	int x = START_X;
 	for (int i = 0; i < 10; i++) {
@@ -541,6 +539,9 @@ void Fallback::updateGameScreen(float frameTime) {
 	player.update(frameTime);
 
 	// update all other sprites to move opposite player move direction
+	//
+
+	// bg art
 	switch (player.moveDirection) {
 		case UP:
 			backgroundImage.setY(backgroundImage.getY() + 1);
@@ -555,6 +556,9 @@ void Fallback::updateGameScreen(float frameTime) {
 			backgroundImage.setX(backgroundImage.getX() + 1);
 			break;
 	}
+
+	// all floor tiles
+	updateFloorTiles(frameTime, player.moveDirection);
 
 	//if (ballResetting) {
 	//	// move ball with ship
@@ -592,6 +596,26 @@ void Fallback::updateGameScreen(float frameTime) {
 	//	loseBall();
 	//	restartBall();
 	//}
+}
+
+void Fallback::updateFloorTiles(float frameTime, PLAYERMOVE_DIR pDir)
+{
+	for (int i = 0; i < blocks.size(); i++) {
+		switch (pDir) {
+			case UP:
+				blocks.at(i).setY(blocks.at(i).getY() + 1);
+				break;
+			case RIGHT:
+				blocks.at(i).setX(blocks.at(i).getX() - 1);
+				break;
+			case DOWN:
+				blocks.at(i).setY(blocks.at(i).getY() - 1);
+				break;
+			case LEFT:
+				blocks.at(i).setX(blocks.at(i).getX() + 1);
+				break;
+		}
+	}
 }
 
 void Fallback::updateGameOverScreen(float frameTime)
