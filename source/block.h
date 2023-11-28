@@ -51,9 +51,6 @@ public:
     void setColor(COLOR_ARGB c) { color = c; };
     COLOR_ARGB getColor() { return color; };
     void setBlockColorByType();
-
-    // animations
-    void bounceScale(float initialScale, float endScale);
 };
 #endif
 
