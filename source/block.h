@@ -8,8 +8,8 @@
 
 namespace blockNS
 {
-    const int WIDTH = 32;                   // image width
-    const int HEIGHT = 32;                  // image height
+    const int WIDTH = 64;                   // image width
+    const int HEIGHT = 64;                  // image height
     const int X = 0;   // location on screen
     const int Y = 0;
     const float SPEED = 0;                // 100 pixels per second
