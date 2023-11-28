@@ -158,30 +158,28 @@ void Player::resetSpeed()
 //=============================================================================
 void Player::update(float frameTime)
 {
-	// move up
-	if (input->isKeyDown(PLAYER_UP_KEY)) {
-		//spriteData.y -= frameTime * currentSpeed;
+	// player can not change to opposite direction, only left/right turns from forward
+
+	// UP
+	if (input->isKeyDown(PLAYER_UP_KEY) && moveDirection != DOWN) {
 		spriteData.angle = 0;
 		moveDirection = UP;
 	}
 	
-	// move right
-	if (input->isKeyDown(PLAYER_RIGHT_KEY)) {
-		//spriteData.x += frameTime * currentSpeed;
+	// RIGHT
+	if (input->isKeyDown(PLAYER_RIGHT_KEY) && moveDirection != LEFT) {
 		spriteData.angle = 1.5708;
 		moveDirection = RIGHT;
 	}
 
-	// move down
-	if (input->isKeyDown(PLAYER_DOWN_KEY)) {
-		//spriteData.y += frameTime * currentSpeed;
+	// DOWN
+	if (input->isKeyDown(PLAYER_DOWN_KEY) && moveDirection != UP) {
 		spriteData.angle = 3.14159;
 		moveDirection = DOWN;
 	}
 	
-	// move left
-	if (input->isKeyDown(PLAYER_LEFT_KEY)) {
-		//spriteData.x -= frameTime * currentSpeed;
+	// LEFT
+	if (input->isKeyDown(PLAYER_LEFT_KEY) && moveDirection != RIGHT) {
 		spriteData.angle = -1.5708;
 		moveDirection = LEFT;
 	}

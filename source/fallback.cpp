@@ -38,6 +38,9 @@ Fallback::Fallback()
 	titleLoading = false;
 	currentPowerUp = FAST; // not actually applied, null would be better
 	animId = 0;
+	timer = 0;
+	score = 0;
+	isPaused = false;
 }
 
 //=============================================================================
@@ -547,6 +550,7 @@ void Fallback::updateGameScreen(float frameTime) {
 
 	player.update(frameTime);
 
+	// update all other sprites to move opposite player move direction
 	switch (player.moveDirection) {
 		case UP:
 			backgroundImage.setY(backgroundImage.getY() + 1);
