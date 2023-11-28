@@ -252,10 +252,10 @@ void Fallback::initMessageSprites()
 //=============================================================================
 void Fallback::initPlayerArrow()
 {
-	if (!shipTexture.initialize(graphics, PLAYER_PATH)) {
+	if (!playerTexture.initialize(graphics, PLAYER_PATH)) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
 	}
-	if (!player.initialize(this, playerNS::WIDTH, playerNS::HEIGHT, playerNS::TEXTURE_COLS, &shipTexture))
+	if (!player.initialize(this, playerNS::WIDTH, playerNS::HEIGHT, playerNS::TEXTURE_COLS, &playerTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player entity"));
 
 	//ship.setFrames(playerNS::SHIP_START_FRAME, playerNS::SHIP_END_FRAME);
@@ -1204,7 +1204,7 @@ void Fallback::releaseAll()
 	backgroundTexture.onLostDevice();
 	titleTexture.onLostDevice();
 	iconTexture.onLostDevice();
-	shipTexture.onLostDevice();
+	playerTexture.onLostDevice();
 	floorTexture.onLostDevice();
 	buttonTexture.onLostDevice();
 	gameOverTexture.onLostDevice();
@@ -1227,7 +1227,7 @@ void Fallback::resetAll()
 	backgroundTexture.onResetDevice();
 	titleTexture.onResetDevice();
 	iconTexture.onResetDevice();
-	shipTexture.onResetDevice();
+	playerTexture.onResetDevice();
 	detailsTexture.onResetDevice();
 	floorTexture.onResetDevice();
 	buttonTexture.onResetDevice();

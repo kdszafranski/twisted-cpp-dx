@@ -70,7 +70,7 @@ private:
     TextureManager backgroundTexture;
     TextureManager titleTexture;
     TextureManager iconTexture;
-    TextureManager shipTexture;
+    TextureManager playerTexture;
     TextureManager detailsTexture;
     TextureManager floorTexture;
     TextureManager buttonTexture;
