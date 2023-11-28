@@ -47,6 +47,7 @@ private:
     bool hasPowerUp = false;
     bool ballResetting = false;
     bool titleLoading = false;
+    bool bIsOnPath = false;
     int score;
     int ballCount;
     int currentLevel;

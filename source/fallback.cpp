@@ -33,6 +33,7 @@ Fallback::Fallback()
 	racerSpawnTimer = 0;
 	hasPowerUp = false;
 	bIsMoving = false;
+	bIsOnPath = false;
 	powerUpTimer = 0;
 	titleLoadingTimer = 0;
 	titleLoading = false;
@@ -126,6 +127,7 @@ void Fallback::resetGame()
 	hasPowerUp = false;
 	gameOver = false;
 	isPaused = false;
+	bIsOnPath = true;
 	ballCount = MAX_BALLS;
 	timer = 0;
 	powerUpTimer = 0;
@@ -606,18 +608,7 @@ void Fallback::updateGameOverScreen(float frameTime)
 {
 	// pick out a block and bounce it
 	timer += frameTime;
-	float duration = 0.75f;
-	if (timer > duration) {
-		int index = rand() % blocks.size();
-		StrongAnimationPtr animPtr;
-		if (index % 2 == 0) {
-			animPtr = std::make_shared<PinchScale>(&blocks.at(index), duration, 0.8f);
-		} else {
-			animPtr = std::make_shared<PunchScale>(&blocks.at(index), duration, 1.2f);
-		}
-		m_AnimationManager.attachProcess(animPtr);
-		timer = 0;
-	}
+	console.setLogText("GAME OVER SCREEN");
 }
 
 /// <summary>
@@ -805,12 +796,12 @@ void Fallback::CheckCheatInput()
 
 bool Fallback::isGameOver()
 {
-	if (ballCount < 1) {
-		// game over
-		return true;
+	// we're good until we fall off
+	if (bIsOnPath) {		
+		return false;
 	}
 
-	return false;
+	return true;
 }
 
 //=============================================================================
@@ -904,17 +895,13 @@ void Fallback::ai()
 //=============================================================================
 void Fallback::collisions()
 {
-	bool bIsOnPath = false;
-
-	//if (isGameOver()) return;
+	if (isGameOver()) return; // no need to do this if we're done
 
 	VECTOR2 collisionVector, collisionPosition;
 
 	if (!isPaused) {
-		// collision ball with block
-		//bool hitThisFrame = false;
+
 		for (int i = 0; i < blocks.size(); i++) {
-			// must use .at() to properly access the actual block object
 			// .at() returns a "reference".. hence a pointer is needed to capture it properly
 			Block* const block = &blocks.at(i);
 			
@@ -928,6 +915,8 @@ void Fallback::collisions()
 				break; // we just need to be on a block
 			}
 
+			bIsOnPath = false;
+
 		} // end blocks loop
 
 		if (bIsOnPath) {
@@ -936,8 +925,8 @@ void Fallback::collisions()
 			console.setLogText("FELL OFF");
 		}
 
-		// see if we got'em all
-		checkGameOver();
+		gameOver = isGameOver();
+
 	}
 
 }
@@ -973,6 +962,7 @@ void Fallback::removeBlock(int index)
 
 void Fallback::checkGameOver()
 {
+
 	return;
 }
 
