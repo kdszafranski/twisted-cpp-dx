@@ -560,17 +560,6 @@ void Fallback::updateGameScreen(float frameTime) {
 	// all floor tiles
 	updateFloorTiles(frameTime, player.moveDirection);
 
-	//if (ballResetting) {
-	//	// move ball with ship
-	//	ball.setPosition((player.getX() + player.getWidth() / 2) - ball.getWidth() / 2, player.getY() - ball.getHeight() - 1);
-	//	// allow input to launch
-	//	if (input->wasKeyPressed(PLAYER_UP_KEY)) {
-	//		launchBall();
-	//	}
-	//} else {
-	//	ball.update(frameTime);
-	//}
-
 	// handle power ups timer
 	//if (hasPowerUp) {
 	//	powerUpTimer += frameTime;
@@ -591,11 +580,6 @@ void Fallback::updateGameScreen(float frameTime) {
 	//	timer = 0;
 	//}
 
-	//// check if the ball went off below ship
-	//if (ball.getY() > GAME_HEIGHT) {
-	//	loseBall();
-	//	restartBall();
-	//}
 }
 
 void Fallback::updateFloorTiles(float frameTime, PLAYERMOVE_DIR pDir)
