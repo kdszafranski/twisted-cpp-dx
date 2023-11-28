@@ -42,6 +42,7 @@ const char BG_PATH[] = "images\\bg-sprites.jpg";
 const char TITLE_PATH[] = "images\\fallback-title.png";
 const char GAME_OVER_PATH[] = "images\\game-over-msg.png";
 const char ICONS_PATH[] = "images\\ui-icons.png";
+const char LOGO_PATH[] = "images\\Logo.png";
 const char PLAYER_PATH[] = "images\\Playerarrow.png";
 const char RACER_PATH[] = "images\\racers.png";
 const char TILE_PATH[] = "images\\Floor.png";

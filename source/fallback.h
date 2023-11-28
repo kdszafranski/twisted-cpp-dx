@@ -76,9 +76,11 @@ private:
     TextureManager buttonTexture;
     TextureManager gameOverTexture;
     TextureManager powerUpTexture;
+    TextureManager logoTexture;
     Image backgroundImage;
     Image titleImage;
     Image gameOverImage;
+    Image logoImage;
     Button newGameButton;
     Button editorButton;
     Button creditsButton;

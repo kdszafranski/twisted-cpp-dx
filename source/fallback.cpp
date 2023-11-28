@@ -327,6 +327,17 @@ void Fallback::initUI()
 	uiCurrentPowerUpIcon.setCurrentFrame(currentPowerUp);
 	uiCurrentPowerUpIcon.setPosition(uiCurrentPowerUpDiamond.getPosition());
 
+	// logo
+	if (!logoTexture.initialize(graphics, LOGO_PATH))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing logo texture"));
+	}
+	if (!logoImage.initialize(this->graphics, 246, 188, 1, &logoTexture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Logo image"));
+	}
+	logoImage.setPosition(GAME_WIDTH - logoImage.getWidth() - 8, GAME_HEIGHT - logoImage.getHeight() - 8);
+
 }
 
 //=============================================================================
@@ -1105,47 +1116,48 @@ void Fallback::renderGameScreen()
 	//explosionManager.draw();
 
 	// UI
-	//renderUI();
+	renderUI();
 	console.renderLog();
 }
 
 void Fallback::renderUI()
 {
-	RECT scoreRect;
-	scoreRect.left = 654;	// upper left X
-	scoreRect.top = 10;		// upper left Y
-	scoreRect.right = GAME_WIDTH - 8; // lower right X
-	scoreRect.bottom = scoreRect.top + 48;	// lower right Y
+	logoImage.draw();
+	//RECT scoreRect;
+	//scoreRect.left = 654;	// upper left X
+	//scoreRect.top = 10;		// upper left Y
+	//scoreRect.right = GAME_WIDTH - 8; // lower right X
+	//scoreRect.bottom = scoreRect.top + 48;	// lower right Y
 
-	// score shadow
-	dxScoreFont.setFontColor(graphicsNS::GRAY & graphicsNS::ALPHA50);
-	dxScoreFont.print(std::to_string(score), scoreRect, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
+	//// score shadow
+	//dxScoreFont.setFontColor(graphicsNS::GRAY & graphicsNS::ALPHA50);
+	//dxScoreFont.print(std::to_string(score), scoreRect, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
 
-	// score main font, adjust rect position up and left
-	scoreRect.left = 649;	// upper left X
-	scoreRect.top = 7;		// upper left Y
-	scoreRect.right = GAME_WIDTH - 11;
-	scoreRect.bottom = scoreRect.top + 48;
-	dxScoreFont.setFontColor(graphicsNS::WHITE);
-	dxScoreFont.print(std::to_string(score), scoreRect, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
+	//// score main font, adjust rect position up and left
+	//scoreRect.left = 649;	// upper left X
+	//scoreRect.top = 7;		// upper left Y
+	//scoreRect.right = GAME_WIDTH - 11;
+	//scoreRect.bottom = scoreRect.top + 48;
+	//dxScoreFont.setFontColor(graphicsNS::WHITE);
+	//dxScoreFont.print(std::to_string(score), scoreRect, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
 
-	// ball count number
-	scoreRect.left = GAME_WIDTH - 24;	// upper left X
-	scoreRect.top += 51;				// upper left Y
-	scoreRect.right = GAME_WIDTH;		// lower right X
-	scoreRect.bottom = scoreRect.top + 32;	// lower right Y
-	dxBallCount.setFontColor(getBallCountColor());
-	dxBallCount.print(std::to_string(ballCount), scoreRect, DT_LEFT | DT_SINGLELINE);
+	//// ball count number
+	//scoreRect.left = GAME_WIDTH - 24;	// upper left X
+	//scoreRect.top += 51;				// upper left Y
+	//scoreRect.right = GAME_WIDTH;		// lower right X
+	//scoreRect.bottom = scoreRect.top + 32;	// lower right Y
+	//dxBallCount.setFontColor(getBallCountColor());
+	//dxBallCount.print(std::to_string(ballCount), scoreRect, DT_LEFT | DT_SINGLELINE);
 
-	// ball count icon and x
-	ballCountIcon.draw(ballCountIcon.getColorFilter(), true);
-	ballCountXImage.draw();
+	//// ball count icon and x
+	//ballCountIcon.draw(ballCountIcon.getColorFilter(), true);
+	//ballCountXImage.draw();
 
-	// power ups
-	if (hasPowerUp) {
-		uiCurrentPowerUpDiamond.draw(currentPowerUpColor, true);
-		uiCurrentPowerUpIcon.draw();
-	}
+	//// power ups
+	//if (hasPowerUp) {
+	//	uiCurrentPowerUpDiamond.draw(currentPowerUpColor, true);
+	//	uiCurrentPowerUpIcon.draw();
+	//}
 }
 
 COLOR_ARGB Fallback::getBallCountColor()
@@ -1209,6 +1221,7 @@ void Fallback::releaseAll()
 	buttonTexture.onLostDevice();
 	gameOverTexture.onLostDevice();
 	detailsTexture.onLostDevice();
+	logoTexture.onLostDevice();
 
 	dxScoreFont.onLostDevice();
 	dxBallCount.onLostDevice();
@@ -1232,6 +1245,7 @@ void Fallback::resetAll()
 	floorTexture.onResetDevice();
 	buttonTexture.onResetDevice();
 	gameOverTexture.onResetDevice();
+	logoTexture.onResetDevice();
 
 	dxScoreFont.onResetDevice();
 	dxBallCount.onResetDevice();
