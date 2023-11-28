@@ -124,7 +124,7 @@ public:
     void updateEffects(float frameTime);
     
     void ai();          // "
-    void collisions();  // "
+    void collisions() override;  // "
     void render();  // render game objects
     void renderTitleScreen();
     void renderRacers();

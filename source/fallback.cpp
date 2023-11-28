@@ -904,14 +904,15 @@ void Fallback::ai()
 //=============================================================================
 void Fallback::collisions()
 {
-	if (isGameOver()) return;
+	bool bIsOnPath = false;
+
+	//if (isGameOver()) return;
 
 	VECTOR2 collisionVector, collisionPosition;
 
 	if (!isPaused) {
-
 		// collision ball with block
-		bool hitThisFrame = false;
+		//bool hitThisFrame = false;
 		for (int i = 0; i < blocks.size(); i++) {
 			// must use .at() to properly access the actual block object
 			// .at() returns a "reference".. hence a pointer is needed to capture it properly
@@ -922,18 +923,18 @@ void Fallback::collisions()
 				continue; // skip
 			}
 
-			if (ball.collidesWith(blocks.at(i), collisionVector)) {
-				int direction = 0; // used to determine the direction of impact
-				hitThisFrame = true;
-				
-				ball.bounce(collisionVector, block->getSpriteData(), direction);
-				
-				if (hitThisFrame) {
-					break; // exit loop since we already hit a block
-				}
+			if (player.collidesWith(blocks.at(i), collisionVector)) {	
+				bIsOnPath = true;
+				break; // we just need to be on a block
+			}
 
-			} // end collision if
 		} // end blocks loop
+
+		if (bIsOnPath) {
+			console.setLogText("On Path");
+		} else {
+			console.setLogText("FELL OFF");
+		}
 
 		// see if we got'em all
 		checkGameOver();
