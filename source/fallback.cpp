@@ -138,7 +138,7 @@ void Fallback::resetGame()
 
 void Fallback::exitGame()
 {
-	console.setLogText("");
+	//console.setLogText("");
 	isPaused = false;
 	ballCount = 0;
 
@@ -1177,6 +1177,8 @@ void Fallback::CheckForExit() {
 				break;
 			case GAME:
 				exitGame();
+				// faster for testing
+				PostQuitMessage(0);
 				break;
 			case EDITOR:
 				exitEditor();
