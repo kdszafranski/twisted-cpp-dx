@@ -112,8 +112,7 @@ void Fallback::startNewGame()
 	// reset game variables
 	resetGame();
 
-	// level numbers are 0-based... :/
-	//loadLevel(currentLevel);
+	loadRandomLevel();
 
 	// play!
 	//restartBall();
@@ -400,43 +399,36 @@ void Fallback::loadLevel(int levelNumber)
 }
 
 /// <summary>
-/// Generates a level of random blocks
+/// Generates text paths
 /// </summary>
 void Fallback::loadRandomLevel()
 {
-	constexpr int START_X = 82;
-	constexpr int START_Y = 100;
-	constexpr int COLS = 10;
+	const int START_X = player.getX();
+	const int START_Y = player.getY();
 
 	blocks.clear();
 	blocks.reserve(21);
 
 	srand((unsigned)time(0));
 	int y = START_Y;
-	for (int i = 0; i < 2; i++) {
+	int x = START_X;
+	for (int i = 0; i < 10; i++) {
+		Block newBlock;
 
-		int x = START_X;
-		for (int j = 0; j < COLS; j++) {
-
-			Block newBlock;
-
-			if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &floorTexture))
-			{
-				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
-			}
-
-			newBlock.setPosition(x, y);
-			newBlock.setVelocity(VECTOR2(0, 0));
-
-			// add to vector
-			blocks.push_back(newBlock);
-
-			// move to the right
-			x += blockNS::WIDTH;
+		if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &floorTexture))
+		{
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
 		}
 
+		newBlock.setPosition(x, y);
+		newBlock.setVelocity(VECTOR2(0, 0));
+
+		// add to vector
+		blocks.push_back(newBlock);
+
+
 		// set new row downward
-		y += blockNS::HEIGHT;
+		y -= blockNS::HEIGHT;
 	}
 }
 
@@ -1094,6 +1086,11 @@ void Fallback::launchEditor()
 void Fallback::renderGameScreen()
 {
 	backgroundImage.draw();
+
+	// draw paths
+	for (int i = 0; i < blocks.size(); i++) {
+		blocks.at(i).draw();
+	}
 
 	if (gameOver) {
 		// show message
