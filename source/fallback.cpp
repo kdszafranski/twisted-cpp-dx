@@ -417,8 +417,8 @@ void Fallback::loadLevel(int levelNumber)
 /// </summary>
 void Fallback::loadRandomLevel()
 {
-	const int START_X = 400 - blockNS::WIDTH / 2;
-	const int START_Y = 300 - blockNS::HEIGHT / 2;
+	const int START_X = GAME_WIDTH / 2 - blockNS::WIDTH / 2;
+	const int START_Y = GAME_HEIGHT / 2 - blockNS::HEIGHT / 2;
 
 	blocks.clear();
 
