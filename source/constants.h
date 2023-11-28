@@ -42,7 +42,7 @@ const char BG_PATH[] = "images\\bg-sprites.jpg";
 const char TITLE_PATH[] = "images\\fallback-title.png";
 const char GAME_OVER_PATH[] = "images\\game-over-msg.png";
 const char ICONS_PATH[] = "images\\ui-icons.png";
-const char SHIP_PATH[] = "images\\ship.png";
+const char PLAYER_PATH[] = "images\\Playerarrow.png";
 const char RACER_PATH[] = "images\\racers.png";
 const char BLOCK_PATH[] = "images\\blocks.png";
 const char NG_BUTTON_PATH[] = "images\\buttons.png";
@@ -73,6 +73,9 @@ enum WEAPON { TORPEDO, SHIP, PLANET, BALL };
 enum BLOCK { WEAK, STRONG, HARD, METAL, INVINCIBLE, NONE };
 // screen states
 enum SCREEN { TITLE, GAME, EDITOR, CREDITS };
+// player movement direction
+enum PLAYERMOVE_DIR { NOT_MOVING, UP, RIGHT, DOWN, LEFT };
+
 // Powerups
 // Slow - slows ball x
 // WRAP - allows ship to wrap around to the other side
@@ -112,10 +115,10 @@ const char ZAP[] = "zap";
 const UCHAR ESC_KEY = VK_ESCAPE;       // escape key
 const UCHAR ALT_KEY = VK_MENU;         // Alt key
 const UCHAR ENTER_KEY = VK_RETURN;       // Enter key
-const UCHAR SHIP_LEFT_KEY = VK_LEFT;     // left arrow
-const UCHAR SHIP_RIGHT_KEY = VK_RIGHT;    // right arrow
-const UCHAR NEXT_LEVEL_KEY = VK_DOWN;       // up arrow
-const UCHAR LAUNCH_BALL_KEY = VK_UP;
+const UCHAR PLAYER_LEFT_KEY = VK_LEFT;     // left arrow
+const UCHAR PLAYER_RIGHT_KEY = VK_RIGHT;    // right arrow
+const UCHAR PLAYER_DOWN_KEY = VK_DOWN;       // up arrow
+const UCHAR PLAYER_UP_KEY = VK_UP;
 const UCHAR SPACE_KEY = VK_SPACE;     // down arrow
 
 #endif

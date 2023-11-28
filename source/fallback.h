@@ -14,7 +14,7 @@
 #include <list>
 #include "textureManager.h"
 #include "image.h"
-#include "ship.h"
+#include "Player.h"
 #include "ball.h"
 #include "block.h"
 #include "textDX.h"
@@ -43,6 +43,7 @@ private:
     std::vector<Level> levels;
     std::list<Image> racers;
     bool gameOver = false;
+    bool bIsMoving = false;
     bool hasPowerUp = false;
     bool ballResetting = false;
     bool titleLoading = false;
@@ -93,7 +94,7 @@ private:
     std::vector<VECTOR2> recentBallPositions;
 
     // sprites
-    Ship ship;
+    Player player;
     Ball ball;
     Block block;
 
@@ -154,7 +155,7 @@ public:
     void initBackgrounds();
     void initButtons();
     void initSprites();
-    void initShip();
+    void initPlayerArrow();
     void initBall();
     void initUI();
     void initBlocks();
