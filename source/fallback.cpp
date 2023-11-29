@@ -446,6 +446,7 @@ void Fallback::loadRandomLevel()
 	currentPosition = makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
 
 	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
 
 
 	/*
@@ -961,7 +962,7 @@ void Fallback::ai()
 //=============================================================================
 void Fallback::collisions()
 {
-	if (isGameOver()) return; // no need to do this if we're done
+	//if (isGameOver()) return; // no need to do this if we're done
 
 	VECTOR2 collisionVector, collisionPosition;
 
@@ -986,7 +987,7 @@ void Fallback::collisions()
 		} // end blocks loop
 
 		// only check these if not on floor tile
-		if (bIsOnPath == false) {
+	/*	if (bIsOnPath == false) {
 			for (int i = 0; i < turnables.size(); i++) {
 				if (turnables.at(i).getIsAnimating()) {
 					continue;
@@ -999,7 +1000,7 @@ void Fallback::collisions()
 			
 				bIsOnPath = false;
 			}
-		}
+		}*/
 
 		gameOver = isGameOver();
 
