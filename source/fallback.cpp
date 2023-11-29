@@ -425,15 +425,25 @@ void Fallback::loadRandomLevel()
 
 
 	currentPosition = MakeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+	//currentPosition = MakeStraightaway(3, UP, currentPosition.x, currentPosition.y);
+	//currentPosition = MakeStraightaway(3, LEFT, currentPosition.x, currentPosition.y);
+	//currentPosition = MakeStraightaway(3, RIGHT, currentPosition.x, currentPosition.y);
+	//currentPosition = MakeStraightaway(3, UP, currentPosition.x, currentPosition.y);
 
 	srand((unsigned)time(0));
 	ePlayerMoveDirection direction = UP;
 	ePlayerMoveDirection lastDirection = direction;
 	int distance = 0;
-	for (int i = 0; i < 5; i++) {
-		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );		
+	for (int i = 0; i < 15; i++) {
+		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );	
+		//if (i == 0) {
+		//	direction = LEFT;
+		//}
+		//if (i == 1) {
+		//	direction = RIGHT;
+		//}
 		distance = 3; // rand() % 4 + 2;
-		if (direction - lastDirection == abs(2)) {
+		if (abs(direction - lastDirection) == 2) {
 			// move around clockwise
 			direction += 1;
 		}
@@ -1202,16 +1212,14 @@ Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction,
 {
 	int x = startX;
 	int y = startY;
+	int test = 0;
 
 	for (int i = 0; i < distance; i++) {
 		// check if we can add this block
 		for (int j = 0; j < blocks.size(); j++) {
-			int bX = blocks.at(j).getX();
-			int bY = blocks.at(j).getY();
-			if (x == bX && bY == y) {
-				if (true) {
-					//
-				}
+			Block thisBlock = blocks.at(j);
+			if (thisBlock.getX() == x && thisBlock.getY() == y) {
+				return { 0,0 };
 			}
 		}
 
