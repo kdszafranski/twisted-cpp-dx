@@ -426,7 +426,7 @@ void Fallback::loadRandomLevel()
 	blocks.clear();
 
 
-	currentPosition = MakeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
 	//currentPosition = MakeStraightaway(3, UP, currentPosition.x, currentPosition.y);
 	//currentPosition = MakeStraightaway(3, LEFT, currentPosition.x, currentPosition.y);
 	//currentPosition = MakeStraightaway(3, RIGHT, currentPosition.x, currentPosition.y);
@@ -448,16 +448,16 @@ void Fallback::loadRandomLevel()
 		// make sections
 		switch (direction) {
 			case UP:
-				currentPosition = MakeStraightaway(distance, UP, currentPosition.x, currentPosition.y);
+				currentPosition = makeStraightaway(distance, UP, currentPosition.x, currentPosition.y);
 				break;
 			case DOWN:
-				currentPosition = MakeStraightaway(distance, DOWN, currentPosition.x, currentPosition.y);
+				currentPosition = makeStraightaway(distance, DOWN, currentPosition.x, currentPosition.y);
 				break;
 			case RIGHT:
-				currentPosition = MakeStraightaway(distance, RIGHT, currentPosition.x, currentPosition.y);
+				currentPosition = makeStraightaway(distance, RIGHT, currentPosition.x, currentPosition.y);
 				break;
 			case LEFT:
-				currentPosition = MakeStraightaway(distance, LEFT, currentPosition.x, currentPosition.y);
+				currentPosition = makeStraightaway(distance, LEFT, currentPosition.x, currentPosition.y);
 				break;
 			default:
 				distance += 1;
@@ -509,9 +509,9 @@ void Fallback::update(float frameTime)
 
 	// handle Game updates and inputs
 	if (currentScreen == GAME) {
-		CheckPauseInput();
+		checkPauseInput();
 		if (!gameOver) {
-			CheckCheatInput();
+			checkCheatInput();
 		}
 
 		if (!isPaused) {
@@ -542,7 +542,7 @@ void Fallback::update(float frameTime)
 	}
 
 	// check if we want to exit
-	CheckForExit();
+	checkForExit();
 }
 
 /// <summary>
@@ -808,7 +808,7 @@ void Fallback::removePowerUp()
 }
 #pragma endregion
 
-void Fallback::CheckPauseInput()
+void Fallback::checkPauseInput()
 {
 	if (currentScreen == GAME) {
 		// SPACE pauses
@@ -820,7 +820,7 @@ void Fallback::CheckPauseInput()
 }
 
 
-void Fallback::CheckCheatInput()
+void Fallback::checkCheatInput()
 {
 	if (currentScreen == GAME) {
 		// next level
@@ -1206,7 +1206,7 @@ COLOR_ARGB Fallback::getBallCountColor()
 	return graphicsNS::WHITE;
 }
 
-Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction, int startX, int startY)
+Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction, int startX, int startY)
 {
 	int x = startX;
 	int y = startY;
@@ -1268,7 +1268,7 @@ Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction,
 //=============================================================================
 // ESC key quits the game
 //=============================================================================
-void Fallback::CheckForExit() {
+void Fallback::checkForExit() {
 	// ESC key always quits
 	if (input->wasKeyPressed(ESC_KEY)) {
 		switch (currentScreen) {

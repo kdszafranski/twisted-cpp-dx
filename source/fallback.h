@@ -201,14 +201,14 @@ public:
 
 
     // maze gen methods
-    Vec2Int MakeStraightaway(int distance, ePlayerMoveDirection direction, int x, int y);
+    Vec2Int makeStraightaway(int distance, ePlayerMoveDirection direction, int x, int y);
 
     // helper to handle exit inputs
-    void CheckForExit(); 
+    void checkForExit(); 
     // helper to handle pause input
-    void CheckPauseInput(); 
+    void checkPauseInput(); 
     // helper to handle cheat inputs
-    void CheckCheatInput();
+    void checkCheatInput();
 
     AnimationManager* getAnimationManager() { return &m_AnimationManager; }
 };
