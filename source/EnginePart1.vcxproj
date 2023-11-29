@@ -134,6 +134,7 @@
     <ClCompile Include="textButton.cpp" />
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="textureManager.cpp" />
+    <ClCompile Include="turnable.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="textButton.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="textureManager.h" />
+    <ClInclude Include="turnable.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\docs\notes.md" />

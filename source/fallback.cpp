@@ -53,8 +53,10 @@ Fallback::~Fallback()
 
 	// remove all running animations
 	racers.clear();
-	m_AnimationManager.abortAllProcesses(true);
+	turnables.clear();
 	console.resetLog();
+
+	m_AnimationManager.abortAllProcesses(true);
 
 	SAFE_DELETE(fallingPowerUpPtr);
 	SAFE_DELETE(editor);
@@ -150,6 +152,7 @@ void Fallback::exitGame()
 
 	// clean up game
 	blocks.clear();
+	turnables.clear();
 	racers.clear();
 
 	SAFE_DELETE(fallingPowerUpPtr);
@@ -352,6 +355,11 @@ void Fallback::initFloor()
 	{
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Floor texture"));
 	}
+	// load our texture, reuse it for all Floor Entities
+	if (!turnableTexture.initialize(graphics, TURNABLE_BASE_PATH))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Turnable texture"));
+	}
 }
 
 void Fallback::loadLevelFiles() {
@@ -425,6 +433,7 @@ void Fallback::loadRandomLevel()
 
 	// clear vector
 	blocks.clear();
+	turnables.clear();
 
 	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
 
@@ -432,7 +441,7 @@ void Fallback::loadRandomLevel()
 	ePlayerMoveDirection direction = UP;
 	ePlayerMoveDirection lastDirection = direction;
 	int distance = 0;
-
+	/*
 	for (int i = 0; i < 20; i++) {
 		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );	
 		distance = 3; // rand() % 4 + 2;
@@ -467,7 +476,9 @@ void Fallback::loadRandomLevel()
 			return;
 		}
 	}
-	
+	*/
+
+	makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
 }
 
 //=============================================================================
@@ -1133,6 +1144,10 @@ void Fallback::renderGameScreen()
 		blocks.at(i).draw();
 	}
 
+	for (int i = 0; i < turnables.size(); i++) {
+		turnables.at(i).draw();
+	}
+
 	if (gameOver) {
 		// show message
 		gameOverImage.draw();
@@ -1225,6 +1240,8 @@ bool Fallback::isValidLocation(int x, int y)
 		}
 	}
 
+	// @TODO add turnables
+
 	return true;
 }
 
@@ -1281,6 +1298,22 @@ Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction,
 	return { x, y };
 }
 
+void Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
+{
+	Turnable turner;
+	if (!turner.initialize(this, turnableNS::WIDTH, turnableNS::HEIGHT, turnableNS::TEXTURE_COLS, &turnableTexture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
+	}
+
+	turner.setPosition(64, 128);
+	turner.setVelocity(VECTOR2(0, 0));
+
+	turnables.push_back(turner);
+
+
+}
+
 //=============================================================================
 // ESC key quits the game
 //=============================================================================
@@ -1322,6 +1355,7 @@ void Fallback::releaseAll()
 	iconTexture.onLostDevice();
 	playerTexture.onLostDevice();
 	floorTexture.onLostDevice();
+	turnableTexture.onLostDevice();
 	buttonTexture.onLostDevice();
 	gameOverTexture.onLostDevice();
 	detailsTexture.onLostDevice();
@@ -1347,6 +1381,7 @@ void Fallback::resetAll()
 	playerTexture.onResetDevice();
 	detailsTexture.onResetDevice();
 	floorTexture.onResetDevice();
+	turnableTexture.onResetDevice();
 	buttonTexture.onResetDevice();
 	gameOverTexture.onResetDevice();
 	logoTexture.onResetDevice();
