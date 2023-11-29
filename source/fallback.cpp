@@ -1206,6 +1206,21 @@ COLOR_ARGB Fallback::getBallCountColor()
 	return graphicsNS::WHITE;
 }
 
+bool Fallback::isValidLocation(int x, int y)
+{
+	for (int j = 0; j < blocks.size(); j++) {
+		Block thisBlock = blocks.at(j);
+		if (thisBlock.getX() == x && thisBlock.getY() == y) {
+			Vec2Int location = { x, y };
+			console.log("stopping at: ", location);
+			thisBlock.setColorFilter(graphicsNS::RED);
+			return false;
+		}
+	}
+
+	return true;
+}
+
 Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction, int startX, int startY)
 {
 	int x = startX;
@@ -1215,10 +1230,10 @@ Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction,
 		// check if we can add this block
 		for (int j = 0; j < blocks.size(); j++) {
 			Block thisBlock = blocks.at(j);
-			if (thisBlock.getX() == x && thisBlock.getY() == y) {
+			if (!isValidLocation(x, y)) 
+			{
 				Vec2Int location = { x, y };
 				console.log("stopping at: ", location);
-				thisBlock.setColorFilter(graphicsNS::RED);
 				return { x, y };
 			}
 		}

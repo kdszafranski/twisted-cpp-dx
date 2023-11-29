@@ -163,6 +163,7 @@ public:
     void restartBall();
     void launchBall();
     COLOR_ARGB getBallCountColor();
+    bool isValidLocation(int x, int y);
     void spawnPowerUp(VECTOR2 position);
     void applyPowerUp();
     void removePowerUp();
