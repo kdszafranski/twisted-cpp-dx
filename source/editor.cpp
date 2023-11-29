@@ -79,7 +79,7 @@ bool Editor::initialize(Game* pGame, TextureManager* textButtonTexM, TextureMana
 
 	// set up console
 	console = pCons;
-	console->setLogText("EDITOR MODE");
+	console->log("EDITOR MODE");
 
 	initialized = true;
 
@@ -119,7 +119,7 @@ void Editor::update(float frameTime)
 	for (auto it : textButtonList) {
 		if (it->isMouseOver()) {
 			if (input->getMouseLButton()) {
-				console->setLogText("loading file " + std::to_string(it->getIntValue()));
+				console->log("loading file " + std::to_string(it->getIntValue()));
 				currentLevel = it->getIntValue();
 				loadCurrentEditorLevel();
 				saveButton.setText("SAVE LEVEL " + to_string(currentLevel));
@@ -130,7 +130,7 @@ void Editor::update(float frameTime)
 	// SAVE BUTTON
 	if (saveButton.isMouseOver()) {
 		if (input->getMouseLButton()) {
-			console->setLogText("saving file...");
+			console->log("saving file...");
 			saveEditorLevelToFile();
 			dirty = false;
 		}
@@ -164,7 +164,7 @@ void Editor::update(float frameTime)
 		}
 	}
 
-	console->setLogText(dirty ? "unsaved changes" : "up to date");
+	console->log(dirty ? "unsaved changes" : "up to date");
 
 }
 

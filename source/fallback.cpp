@@ -140,7 +140,7 @@ void Fallback::resetGame()
 
 void Fallback::exitGame()
 {
-	//console.setLogText("");
+	//console.log("");
 	isPaused = false;
 	ballCount = 0;
 
@@ -440,7 +440,7 @@ void Fallback::loadRandomLevel()
 	for (int i = 0; i < 20; i++) {
 		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );	
 		distance = 3; // rand() % 4 + 2;
-		console.setLogText("Running at " + std::to_string(i));
+		console.log("Running at " + std::to_string(i));
 		if (abs(direction - lastDirection) == 2) {
 			// move around clockwise
 			direction += 1;
@@ -644,7 +644,6 @@ void Fallback::updateGameOverScreen(float frameTime)
 {
 	// pick out a block and bounce it
 	timer += frameTime;
-	console.setLogText("GAME OVER SCREEN");
 }
 
 /// <summary>
@@ -961,9 +960,9 @@ void Fallback::collisions()
 		} // end blocks loop
 
 		//if (bIsOnPath) {
-		//	console.setLogText("On Path");
+		//	console.log("On Path");
 		//} else {
-		//	console.setLogText("FELL OFF");
+		//	console.log("FELL OFF");
 		//}
 
 		gameOver = isGameOver();
@@ -1218,8 +1217,7 @@ Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction,
 			Block thisBlock = blocks.at(j);
 			if (thisBlock.getX() == x && thisBlock.getY() == y) {
 				Vec2Int location = { x, y };
-				//console.setLogText(location);
-				console.setLogText(location);
+				console.log("stopping at: ", location);
 				thisBlock.setColorFilter(graphicsNS::RED);
 				return { x, y };
 			}
@@ -1292,7 +1290,7 @@ void Fallback::CheckForExit() {
 void Fallback::exitEditor()
 {
 	// clean up
-	console.setLogText("");
+	console.log("");
 	//loadLevelFiles();
 	setTitleScreen();
 }

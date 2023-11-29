@@ -23,13 +23,14 @@ public:
 	// reset text
 	void resetLog();
 	// sets the next log output message
-	void setLogText(int number);
-	void setLogText(const Vec2Int vec);
-	void setLogText(const std::string &message);
-	// adds line to log array
+	void log(int number);
+	void log(const Vec2Int vec);
+	void log(const std::string &message, const Vec2Int vec);
+	void log(const std::string &message);
+
+	// Adds log line to the array for display
 	void AddLine(const std::string newMessage);
-	// set and immediately display
-	void renderLog(const std::string &message);
+	
 	// displays message to the screen
 	void renderLog(); 
 

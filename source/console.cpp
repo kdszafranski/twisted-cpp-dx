@@ -31,24 +31,32 @@ void Console::initialize(Graphics *graphics)
 
 }
 
-void Console::setLogText(const int number)
+void Console::log(const int number)
 {
 	logText = std::to_string(number);
 	AddLine(logText);
 }
-void Console::setLogText(const Vec2Int vec)
+void Console::log(const Vec2Int vec)
 {
 	std::stringstream ss;
-	ss << "stopping at ( " << vec.x << ", " << vec.y << ")";
+	ss << "(" << vec.x << ", " << vec.y << ")";
 	logText = ss.str();
 	AddLine(logText);
 }
-void Console::setLogText(const std::string &message)
+void Console::log(const std::string& message, const Vec2Int vec)
+{
+	std::stringstream ss;
+	ss << message << "  (" << vec.x << ", " << vec.y << ")";
+	logText = ss.str();
+	AddLine(logText);
+}
+void Console::log(const std::string &message)
 {
 	logText = message;
 	AddLine(logText);
 }
 
+// Adds log line to the array for display
 void Console::AddLine(const std::string newMessage)
 {
 	logList.push_back(newMessage);
@@ -64,17 +72,7 @@ void Console::resetLog()
 }
 
 /// <summary>
-/// Sets the log text and immediately displays it
-/// </summary>
-/// <param name="message"></param>
-void Console::renderLog(const std::string& message)
-{
-	setLogText(message);
-	renderLog();
-}
-
-/// <summary>
-/// Renders message to screen. Must be called between spriteBegin and spriteEnd
+/// Renders messages to screen. Must be called between spriteBegin and spriteEnd
 /// Called from game.render()
 /// </summary>
 void Console::renderLog()
