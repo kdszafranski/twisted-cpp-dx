@@ -437,10 +437,15 @@ void Fallback::loadRandomLevel()
 
 	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
 
+
 	srand((unsigned)time(0));
 	ePlayerMoveDirection direction = UP;
 	ePlayerMoveDirection lastDirection = direction;
 	int distance = 0;
+	
+	makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
+
+
 	/*
 	for (int i = 0; i < 20; i++) {
 		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );	
@@ -478,7 +483,6 @@ void Fallback::loadRandomLevel()
 	}
 	*/
 
-	makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
 }
 
 //=============================================================================
@@ -609,11 +613,12 @@ void Fallback::updateGameScreen(float frameTime) {
 
 	// all floor tiles
 	updateFloorTiles(frameTime, player.moveDirection);
+	updateTurnables(frameTime, player.moveDirection);
 
 	if (input->wasKeyPressed(ROTATE_KEY)) {
-		console.log("Rotate Turnsables");
-		for (std::vector<Turnable>::iterator i = turnables.begin(); i != turnables.end(); ++i) {
-			i->rotate();
+		console.log("Rotate Turnables");
+		for (std::vector<Turnable>::iterator it = turnables.begin(); it != turnables.end(); ++it) {
+			it->rotate();
 		}
 	}
 
@@ -634,6 +639,26 @@ void Fallback::updateFloorTiles(float frameTime, ePlayerMoveDirection pDir)
 				break;
 			case LEFT:
 				blocks.at(i).setX(blocks.at(i).getX() + 1);
+				break;
+		}
+	}
+}
+
+void Fallback::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
+{
+	for (std::vector<Turnable>::iterator it = turnables.begin(); it != turnables.end(); ++it) {
+		switch (pDir) {
+			case UP:
+				it->setY(it->getY() + 1);
+				break;
+			case RIGHT:
+				it->setX(it->getX() - 1);
+				break;
+			case DOWN:
+				it->setY(it->getY() - 1);
+				break;
+			case LEFT:
+				it->setX(it->getX() + 1);
 				break;
 		}
 	}
@@ -1287,12 +1312,22 @@ Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction,
 void Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
 {
 	Turnable turner;
+
 	if (!turner.initialize(this, turnableNS::WIDTH, turnableNS::HEIGHT, turnableNS::TEXTURE_COLS, &turnableTexture))
 	{
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
 	}
 
-	turner.setPosition(64, 128);
+	switch (lastDirection) {
+		case UP:
+			y -= turnableNS::HEIGHT / 2; // x,y is the next block space, so move up half
+		case DOWN:
+			turner.rotate();
+			break;
+
+	}
+
+	turner.setPosition(x, y);
 	turner.setVelocity(VECTOR2(0, 0));
 
 	turnables.push_back(turner);

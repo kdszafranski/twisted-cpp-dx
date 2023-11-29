@@ -137,6 +137,8 @@ public:
     void updateGameScreen(float frameTime);
     void updateFloorTiles(float frameTime, ePlayerMoveDirection pDir);
 
+    void updateTurnables(float frameTime, ePlayerMoveDirection pDir);
+
     void updateGameOverScreen(float frameTime);
     // update extraneous elements
     void updateEffects(float frameTime);
