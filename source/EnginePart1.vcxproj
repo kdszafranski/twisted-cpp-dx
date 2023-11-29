@@ -147,6 +147,7 @@
     <ClInclude Include="DirectionBounce.h" />
     <ClInclude Include="editor.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="enums.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="FadeTo.h" />
     <ClInclude Include="fileHandler.h" />

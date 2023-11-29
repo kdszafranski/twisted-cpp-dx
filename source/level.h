@@ -3,6 +3,7 @@
 #include "constants.h"
 #include <vector>
 #include <string>
+#include "enums.h"
 
 /// LEVELS
 

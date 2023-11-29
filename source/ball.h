@@ -1,10 +1,10 @@
-
 #ifndef _BALL_H_                 // Prevent multiple definitions if this 
 #define _BALL_H_                 // file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
 
 #include "entity.h"
 #include "constants.h"
+#include "enums.h"
 
 namespace ballNS
 {

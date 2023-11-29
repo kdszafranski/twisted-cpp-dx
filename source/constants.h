@@ -33,6 +33,11 @@ struct Vector2 {
 	float y;
 };
 
+struct Vec2Int {
+	int x;
+	int y;
+};
+
 //=============================================================================
 //                  Constants
 //=============================================================================
@@ -67,27 +72,6 @@ const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calcul
 const short MAX_BALLS = 3;
 const float BALLSHADOW_INTERVAL = 0.07;
 const float POW_TIME_LIMIT = 8.0f;
-
-// weapon types
-enum WEAPON { TORPEDO, SHIP, PLANET, BALL };
-// block types
-enum BLOCK { WEAK, STRONG, HARD, METAL, INVINCIBLE, NONE };
-// screen states
-enum SCREEN { TITLE, GAME, EDITOR, CREDITS };
-// player movement direction
-enum PLAYERMOVE_DIR { NOT_MOVING, UP, RIGHT, DOWN, LEFT };
-
-// Powerups
-// Slow - slows ball x
-// WRAP - allows ship to wrap around to the other side
-// Fast - speeds up ship x
-// Grow - lengthens ship along x-axis x
-// Penalties
-// Zoom - speeds up ball x
-// Tiny - shrinks ship x
-// Mystery - picks one of the others randomly x
-enum POWERUP { SLOW, WARP, FAST, GROW, ZOOM, TINY, MYSTERY };
-
 
 // audio files required by audio.cpp
 // WAVE_BANK must be location of .xwb file.

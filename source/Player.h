@@ -10,7 +10,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "entity.h"
-#include "constants.h"
+//#include "constants.h"
 
 namespace playerNS
 {
@@ -36,7 +36,7 @@ private:
 
 public:
 
-    PLAYERMOVE_DIR moveDirection;
+    ePlayerMoveDirection moveDirection;
     // constructor
     Player();
 

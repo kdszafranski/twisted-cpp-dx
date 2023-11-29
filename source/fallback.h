@@ -28,6 +28,17 @@
 #include <memory>
 #include "PowerUp.h"
 
+// Should be in enums.h but includes are a jumbled uber-mess
+ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
+	orig = static_cast<ePlayerMoveDirection>(orig + 1);
+	if (orig >= LEFT) {
+		orig = UP;
+		return orig;
+	} else {
+		return orig;
+	}
+}
+
 //=============================================================================
 // Create game class
 //=============================================================================
@@ -120,7 +131,7 @@ public:
     void update(float frameTime);      // must override pure virtual from Game
     void updateTitleScreen(float frameTime);
     void updateGameScreen(float frameTime);
-    void updateFloorTiles(float frameTime, PLAYERMOVE_DIR pDir);
+    void updateFloorTiles(float frameTime, ePlayerMoveDirection pDir);
 
     void updateGameOverScreen(float frameTime);
     // update extraneous elements
@@ -189,7 +200,7 @@ public:
 
 
     // maze gen methods
-    Vector2 MakeStraightaway(int distance, PLAYERMOVE_DIR direction, float x, float y);
+    Vec2Int MakeStraightaway(int distance, ePlayerMoveDirection direction, int x, int y);
 
     // helper to handle exit inputs
     void CheckForExit(); 

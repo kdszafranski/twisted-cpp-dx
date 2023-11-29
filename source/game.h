@@ -15,6 +15,7 @@
 #include "input.h"
 #include "audio.h"
 #include "constants.h"
+#include "enums.h"
 #include "gameError.h"
 
 class Game

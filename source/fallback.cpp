@@ -419,13 +419,44 @@ void Fallback::loadRandomLevel()
 {
 	const int START_X = GAME_WIDTH / 2 - blockNS::WIDTH / 2;
 	const int START_Y = GAME_HEIGHT / 2 - blockNS::HEIGHT / 2;
-	Vector2 currentPosition = { START_X, START_Y };
+	Vec2Int currentPosition = { START_X, START_Y };
 
 	blocks.clear();
 
-	currentPosition = MakeStraightaway(8, UP, currentPosition.x, currentPosition.y);
-	currentPosition = MakeStraightaway(4, RIGHT, currentPosition.x, currentPosition.y);
-	currentPosition = MakeStraightaway(6, DOWN, currentPosition.x, currentPosition.y);
+
+	currentPosition = MakeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+
+	srand((unsigned)time(0));
+	ePlayerMoveDirection direction = UP;
+	ePlayerMoveDirection lastDirection = direction;
+	int distance = 0;
+	for (int i = 0; i < 10; i++) {
+		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );		
+		distance = 3; // rand() % 4 + 2;
+		if (direction - lastDirection == 2) {
+			// move around clockwise
+			direction += 1;
+		}
+		// make sections
+		switch (direction) {
+			case UP:
+				currentPosition = MakeStraightaway(distance, UP, currentPosition.x, currentPosition.y);
+				break;
+			case DOWN:
+				currentPosition = MakeStraightaway(distance, DOWN, currentPosition.x, currentPosition.y);
+				break;
+			case RIGHT:
+				currentPosition = MakeStraightaway(distance, RIGHT, currentPosition.x, currentPosition.y);
+				break;
+			case LEFT:
+				currentPosition = MakeStraightaway(distance, LEFT, currentPosition.x, currentPosition.y);
+				break;
+			default:
+				distance += 1;
+		}
+
+		lastDirection = direction;
+	}
 	
 }
 
@@ -581,7 +612,7 @@ void Fallback::updateGameScreen(float frameTime) {
 
 }
 
-void Fallback::updateFloorTiles(float frameTime, PLAYERMOVE_DIR pDir)
+void Fallback::updateFloorTiles(float frameTime, ePlayerMoveDirection pDir)
 {
 	for (int i = 0; i < blocks.size(); i++) {
 		switch (pDir) {
@@ -1163,10 +1194,10 @@ COLOR_ARGB Fallback::getBallCountColor()
 	return graphicsNS::WHITE;
 }
 
-Vector2 Fallback::MakeStraightaway(int distance, PLAYERMOVE_DIR direction, float startX, float startY)
+Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction, int startX, int startY)
 {
-	float x = startX;
-	float y = startY;
+	int x = startX;
+	int y = startY;
 
 	for (int i = 0; i < distance; i++) {
 		Block newBlock;
@@ -1178,6 +1209,10 @@ Vector2 Fallback::MakeStraightaway(int distance, PLAYERMOVE_DIR direction, float
 
 		newBlock.setPosition(x, y);
 		newBlock.setVelocity(VECTOR2(0, 0));
+
+		if (i == 0) {
+			newBlock.setColorFilter(graphicsNS::BLUE);
+		}
 
 		// add to vector
 		blocks.push_back(newBlock);
