@@ -54,6 +54,7 @@ Fallback::~Fallback()
 	// remove all running animations
 	racers.clear();
 	m_AnimationManager.abortAllProcesses(true);
+	console.resetLog();
 
 	SAFE_DELETE(fallingPowerUpPtr);
 	SAFE_DELETE(editor);
@@ -108,6 +109,7 @@ void Fallback::startNewGame()
 	// stop any other animations
 	m_AnimationManager.clearAllProcesses();
 	explosionManager.clearAllParticles();
+	console.resetLog();
 	racers.clear();
 
 	// reset game variables
@@ -813,6 +815,7 @@ void Fallback::CheckPauseInput()
 		// SPACE pauses
 		if (input->wasKeyPressed(SPACE_KEY)) {
 			isPaused = !isPaused;
+			console.AddLine("Paused: " + isPaused);
 		}
 	}
 }
