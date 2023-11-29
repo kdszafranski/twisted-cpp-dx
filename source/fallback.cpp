@@ -1219,7 +1219,8 @@ Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction,
 			if (thisBlock.getX() == x && thisBlock.getY() == y) {
 				Vec2Int location = { x, y };
 				//console.setLogText(location);
-				//console.setLogText("stopping at " + std::to_string(i));
+				console.setLogText(location);
+				thisBlock.setColorFilter(graphicsNS::RED);
 				return { x, y };
 			}
 		}
