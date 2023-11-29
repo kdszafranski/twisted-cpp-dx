@@ -106,5 +106,6 @@ const UCHAR PLAYER_RIGHT_KEY = VK_RIGHT;    // right arrow
 const UCHAR PLAYER_DOWN_KEY = VK_DOWN;       // up arrow
 const UCHAR PLAYER_UP_KEY = VK_UP;
 const UCHAR SPACE_KEY = VK_SPACE;     // down arrow
+const UCHAR ROTATE_KEY = 0x46; // F key?
 
 #endif

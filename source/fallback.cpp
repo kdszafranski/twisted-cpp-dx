@@ -586,7 +586,6 @@ void Fallback::updateTitleScreen(float frameTime)
 
 void Fallback::updateGameScreen(float frameTime) {
 
-
 	player.update(frameTime);
 
 	// update all other sprites to move opposite player move direction
@@ -611,25 +610,12 @@ void Fallback::updateGameScreen(float frameTime) {
 	// all floor tiles
 	updateFloorTiles(frameTime, player.moveDirection);
 
-	// handle power ups timer
-	//if (hasPowerUp) {
-	//	powerUpTimer += frameTime;
-	//	if (powerUpTimer > POW_TIME_LIMIT) {
-	//		removePowerUp();
-	//	}
-	//}
-
-	// every interval adjust ball trail
-	//timer += frameTime;
-	//if (timer > BALLSHADOW_INTERVAL) {
-	//	recentBallPositions.push_back(VECTOR2(ball.getX(), ball.getY()));
-
-	//	if (recentBallPositions.size() > 5) {
-	//		// remove first
-	//		recentBallPositions.erase(recentBallPositions.begin());
-	//	}
-	//	timer = 0;
-	//}
+	if (input->wasKeyPressed(ROTATE_KEY)) {
+		console.log("Rotate Turnsables");
+		for (std::vector<Turnable>::iterator i = turnables.begin(); i != turnables.end(); ++i) {
+			i->rotate();
+		}
+	}
 
 }
 
