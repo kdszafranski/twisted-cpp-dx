@@ -18,7 +18,7 @@ Turnable::Turnable() : Block()
     spriteData.y = blockNS::Y;
 
     // set bounding box for BOX collider
-    collisionType = entityNS::BOX;      // override's Image default to CIRCLE
+    collisionType = entityNS::ROTATED_BOX;      // override's Image default to CIRCLE
     edge.top = -turnableNS::HEIGHT;     // -128
     edge.right = turnableNS::WIDTH / 2;     // 32
     edge.bottom = turnableNS::HEIGHT;   // 16

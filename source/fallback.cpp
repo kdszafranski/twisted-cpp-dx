@@ -443,7 +443,9 @@ void Fallback::loadRandomLevel()
 	ePlayerMoveDirection lastDirection = direction;
 	int distance = 0;
 	
-	makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
+	currentPosition = makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
+
+	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
 
 
 	/*
@@ -983,11 +985,21 @@ void Fallback::collisions()
 
 		} // end blocks loop
 
-		//if (bIsOnPath) {
-		//	console.log("On Path");
-		//} else {
-		//	console.log("FELL OFF");
-		//}
+		// only check these if not on floor tile
+		if (bIsOnPath == false) {
+			for (int i = 0; i < turnables.size(); i++) {
+				if (turnables.at(i).getIsAnimating()) {
+					continue;
+				}
+
+				if (player.collidesWith(turnables.at(i), collisionVector)) {
+					bIsOnPath = true;
+					break;
+				}
+			
+				bIsOnPath = false;
+			}
+		}
 
 		gameOver = isGameOver();
 
@@ -1309,9 +1321,11 @@ Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction,
 	return { x, y };
 }
 
-void Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
+Vec2Int Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
 {
 	Turnable turner;
+	int nextX = x;
+	int nextY = y;
 
 	if (!turner.initialize(this, turnableNS::WIDTH, turnableNS::HEIGHT, turnableNS::TEXTURE_COLS, &turnableTexture))
 	{
@@ -1320,9 +1334,10 @@ void Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
 
 	switch (lastDirection) {
 		case UP:
-			y -= turnableNS::HEIGHT / 2; // x,y is the next block space, so move up half
+			y -= blockNS::HEIGHT * 2; // x,y is the next block space, so move up again
+			nextY -= turnableNS::HEIGHT;
 		case DOWN:
-			turner.rotate();
+			//turner.rotate();
 			break;
 
 	}
@@ -1331,6 +1346,8 @@ void Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
 	turner.setVelocity(VECTOR2(0, 0));
 
 	turnables.push_back(turner);
+
+	return { nextX, nextY };
 
 
 }

@@ -208,7 +208,7 @@ public:
 
     // maze gen methods
     Vec2Int makeStraightaway(int distance, ePlayerMoveDirection direction, int x, int y);
-    void makeTurnable(ePlayerMoveDirection lastDirection, int x, int y);
+    Vec2Int makeTurnable(ePlayerMoveDirection lastDirection, int x, int y);
 
     // helper to handle exit inputs
     void checkForExit(); 

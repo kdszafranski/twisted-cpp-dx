@@ -8,7 +8,7 @@
 namespace turnableNS
 {
     const int WIDTH = 64;                   // image width
-    const int HEIGHT = 128;                  // image height
+    const int HEIGHT = 192;                  // image height
     const float SPEED = 0;                // Rotation speed?
     const int   TEXTURE_COLS = 1;           // texture has 2 columns
     const int   TURNABLE_START_FRAME = 0;      // ball starts at frame 0
