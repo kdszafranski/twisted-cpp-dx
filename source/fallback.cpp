@@ -423,14 +423,10 @@ void Fallback::loadRandomLevel()
 	const int START_Y = GAME_HEIGHT / 2 - blockNS::HEIGHT / 2;
 	Vec2Int currentPosition = { START_X, START_Y };
 
+	// clear vector
 	blocks.clear();
 
-
 	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
-	//currentPosition = MakeStraightaway(3, UP, currentPosition.x, currentPosition.y);
-	//currentPosition = MakeStraightaway(3, LEFT, currentPosition.x, currentPosition.y);
-	//currentPosition = MakeStraightaway(3, RIGHT, currentPosition.x, currentPosition.y);
-	//currentPosition = MakeStraightaway(3, UP, currentPosition.x, currentPosition.y);
 
 	srand((unsigned)time(0));
 	ePlayerMoveDirection direction = UP;
@@ -464,6 +460,12 @@ void Fallback::loadRandomLevel()
 		}
 
 		lastDirection = direction;
+
+		// if we are crossing, we'll do a bunch of checking for no reason
+		if (!isValidLocation(currentPosition.x, currentPosition.y)) {
+			console.log("ending early");
+			return;
+		}
 	}
 	
 }
@@ -814,7 +816,7 @@ void Fallback::checkPauseInput()
 		// SPACE pauses
 		if (input->wasKeyPressed(SPACE_KEY)) {
 			isPaused = !isPaused;
-			console.AddLine("Paused: " + isPaused);
+			console.AddLine( isPaused? "Paused" : "Unpaused");
 		}
 	}
 }
@@ -1206,14 +1208,19 @@ COLOR_ARGB Fallback::getBallCountColor()
 	return graphicsNS::WHITE;
 }
 
+/// <summary>
+/// Checks a given x, y location for an existing floor tile
+/// </summary>
+/// <param name="x"></param>
+/// <param name="y"></param>
+/// <returns>true if no tile is found, false if a tile is found</returns>
 bool Fallback::isValidLocation(int x, int y)
 {
+	// go thru all blocks and check for this x, y position
 	for (int j = 0; j < blocks.size(); j++) {
 		Block thisBlock = blocks.at(j);
+
 		if (thisBlock.getX() == x && thisBlock.getY() == y) {
-			Vec2Int location = { x, y };
-			console.log("stopping at: ", location);
-			thisBlock.setColorFilter(graphicsNS::RED);
 			return false;
 		}
 	}
@@ -1228,14 +1235,8 @@ Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction,
 
 	for (int i = 0; i < distance; i++) {
 		// check if we can add this block
-		for (int j = 0; j < blocks.size(); j++) {
-			Block thisBlock = blocks.at(j);
-			if (!isValidLocation(x, y)) 
-			{
-				Vec2Int location = { x, y };
-				console.log("stopping at: ", location);
-				return { x, y };
-			}
+		if (!isValidLocation(x, y)) {
+			return { x, y };
 		}
 
 		Block newBlock;
