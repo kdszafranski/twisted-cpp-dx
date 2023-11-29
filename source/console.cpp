@@ -1,5 +1,6 @@
 
 #include "console.h"
+#include <sstream>
 
 Console::Console()
 {
@@ -33,7 +34,12 @@ void Console::setLogText(const int number)
 {
 	logText = std::to_string(number);
 }
-
+void Console::setLogText(const Vec2Int vec)
+{
+	std::stringstream ss;
+	ss << "stopping at ( " << vec.x << ", " << vec.y << ")";
+	logText = ss.str();
+}
 void Console::setLogText(const std::string &message)
 {
 	logText = message;

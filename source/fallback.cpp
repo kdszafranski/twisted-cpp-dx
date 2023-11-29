@@ -434,15 +434,11 @@ void Fallback::loadRandomLevel()
 	ePlayerMoveDirection direction = UP;
 	ePlayerMoveDirection lastDirection = direction;
 	int distance = 0;
-	for (int i = 0; i < 15; i++) {
+
+	for (int i = 0; i < 20; i++) {
 		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );	
-		//if (i == 0) {
-		//	direction = LEFT;
-		//}
-		//if (i == 1) {
-		//	direction = RIGHT;
-		//}
 		distance = 3; // rand() % 4 + 2;
+		console.setLogText("Running at " + std::to_string(i));
 		if (abs(direction - lastDirection) == 2) {
 			// move around clockwise
 			direction += 1;
@@ -961,11 +957,11 @@ void Fallback::collisions()
 
 		} // end blocks loop
 
-		if (bIsOnPath) {
-			console.setLogText("On Path");
-		} else {
-			console.setLogText("FELL OFF");
-		}
+		//if (bIsOnPath) {
+		//	console.setLogText("On Path");
+		//} else {
+		//	console.setLogText("FELL OFF");
+		//}
 
 		gameOver = isGameOver();
 
@@ -1212,14 +1208,16 @@ Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction,
 {
 	int x = startX;
 	int y = startY;
-	int test = 0;
 
 	for (int i = 0; i < distance; i++) {
 		// check if we can add this block
 		for (int j = 0; j < blocks.size(); j++) {
 			Block thisBlock = blocks.at(j);
 			if (thisBlock.getX() == x && thisBlock.getY() == y) {
-				return { 0,0 };
+				Vec2Int location = { x, y };
+				//console.setLogText(location);
+				//console.setLogText("stopping at " + std::to_string(i));
+				return { x, y };
 			}
 		}
 
