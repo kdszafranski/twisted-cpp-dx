@@ -447,6 +447,8 @@ void Fallback::loadRandomLevel()
 
 	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
 	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+	currentPosition = makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
+	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
 
 
 	/*
@@ -650,6 +652,9 @@ void Fallback::updateFloorTiles(float frameTime, ePlayerMoveDirection pDir)
 void Fallback::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
 {
 	for (std::vector<Turnable>::iterator it = turnables.begin(); it != turnables.end(); ++it) {
+		
+		it->update(frameTime); // resets rotated box status
+
 		switch (pDir) {
 			case UP:
 				it->setY(it->getY() + 1);
@@ -962,12 +967,11 @@ void Fallback::ai()
 //=============================================================================
 void Fallback::collisions()
 {
-	//if (isGameOver()) return; // no need to do this if we're done
+	if (isGameOver()) return; // no need to do this if we're done
 
 	VECTOR2 collisionVector, collisionPosition;
 
 	if (!isPaused) {
-
 		for (int i = 0; i < blocks.size(); i++) {
 			// .at() returns a "reference".. hence a pointer is needed to capture it properly
 			Block* const block = &blocks.at(i);
@@ -979,30 +983,26 @@ void Fallback::collisions()
 
 			if (player.collidesWith(blocks.at(i), collisionVector)) {	
 				bIsOnPath = true;
-				break; // we just need to be on a block
+				return; // we just need to be on a block
 			}
-
-			bIsOnPath = false;
 
 		} // end blocks loop
 
+		bIsOnPath = false;
+		
 		// only check these if not on floor tile
-	/*	if (bIsOnPath == false) {
-			for (int i = 0; i < turnables.size(); i++) {
-				if (turnables.at(i).getIsAnimating()) {
-					continue;
-				}
+		for (int i = 0; i < turnables.size(); i++) {
 
-				if (player.collidesWith(turnables.at(i), collisionVector)) {
-					bIsOnPath = true;
-					break;
-				}
-			
-				bIsOnPath = false;
+			if (player.collidesWith(turnables.at(i), collisionVector)) {
+				bIsOnPath = true;
+				console.log("on Turnable");
+				return;
 			}
-		}*/
-
-		gameOver = isGameOver();
+			
+		}
+		
+		bIsOnPath = false;
+		gameOver = true;
 
 	}
 

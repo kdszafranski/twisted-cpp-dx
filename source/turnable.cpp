@@ -19,6 +19,7 @@ Turnable::Turnable() : Block()
 
     // set bounding box for BOX collider
     collisionType = entityNS::ROTATED_BOX;      // override's Image default to CIRCLE
+    rotatedBoxReady = false;
     edge.top = -turnableNS::HEIGHT;     // -128
     edge.right = turnableNS::WIDTH / 2;     // 32
     edge.bottom = turnableNS::HEIGHT;   // 16
