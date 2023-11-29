@@ -29,16 +29,16 @@
 #include "PowerUp.h"
 
 // Should be in enums.h but includes are a jumbled uber-mess
-ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
-	orig = static_cast<ePlayerMoveDirection>(orig + 1);
-	if (orig >= LEFT) {
-		orig = UP;
-		return orig;
-	} else {
-		return orig;
-	}
-}
 
+ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
+    orig = static_cast<ePlayerMoveDirection>(orig + 1);
+    if (orig > LEFT) {
+        orig = UP;
+        return orig;
+    } else {
+        return orig;
+    }
+}
 //=============================================================================
 // Create game class
 //=============================================================================

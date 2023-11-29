@@ -430,10 +430,10 @@ void Fallback::loadRandomLevel()
 	ePlayerMoveDirection direction = UP;
 	ePlayerMoveDirection lastDirection = direction;
 	int distance = 0;
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 5; i++) {
 		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );		
 		distance = 3; // rand() % 4 + 2;
-		if (direction - lastDirection == 2) {
+		if (direction - lastDirection == abs(2)) {
 			// move around clockwise
 			direction += 1;
 		}
@@ -819,6 +819,10 @@ void Fallback::CheckCheatInput()
 		if (input->wasKeyPressed(PLAYER_DOWN_KEY)) {
 			startNextLevel();
 		}
+
+		if (input->wasKeyPressed(ENTER_KEY)) {
+			startNewGame();
+		}
 	}
 }
 
@@ -1200,6 +1204,17 @@ Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction,
 	int y = startY;
 
 	for (int i = 0; i < distance; i++) {
+		// check if we can add this block
+		for (int j = 0; j < blocks.size(); j++) {
+			int bX = blocks.at(j).getX();
+			int bY = blocks.at(j).getY();
+			if (x == bX && bY == y) {
+				if (true) {
+					//
+				}
+			}
+		}
+
 		Block newBlock;
 
 		if (!newBlock.initialize(this, blockNS::WIDTH, blockNS::HEIGHT, blockNS::TEXTURE_COLS, &floorTexture))
@@ -1211,7 +1226,12 @@ Vec2Int Fallback::MakeStraightaway(int distance, ePlayerMoveDirection direction,
 		newBlock.setVelocity(VECTOR2(0, 0));
 
 		if (i == 0) {
+			// first
 			newBlock.setColorFilter(graphicsNS::BLUE);
+		}
+		if (i == distance - 1) {
+			// last
+			newBlock.setColorFilter(graphicsNS::PURPLE);
 		}
 
 		// add to vector

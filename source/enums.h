@@ -9,14 +9,14 @@ enum BLOCK { WEAK, STRONG, HARD, METAL, INVINCIBLE, NONE };
 enum SCREEN { TITLE, GAME, EDITOR, CREDITS };
 
 // player movement direction
-enum ePlayerMoveDirection { NOT_MOVING, UP, RIGHT, DOWN, LEFT };
+enum ePlayerMoveDirection { NOT_MOVING = 0, UP, RIGHT, DOWN, LEFT };
 // increment moves clockwise
 
 //#ifndef OP
 //#define OP
 //ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
 //	orig = static_cast<ePlayerMoveDirection>(orig + 1);
-//	if (orig >= LEFT) {
+//	if (orig > LEFT) {
 //		orig = UP;
 //		return orig;
 //	} else {
