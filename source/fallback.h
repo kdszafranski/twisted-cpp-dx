@@ -29,6 +29,8 @@
 #include <memory>
 #include "PowerUp.h"
 
+#ifndef ENUMTHING 
+#define ENUMTHING
 // Should be in enums.h but includes are a jumbled uber-mess
 ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
     orig = static_cast<ePlayerMoveDirection>(orig + 1);
@@ -39,6 +41,7 @@ ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
         return orig;
     }
 }
+#endif
 
 
 //=============================================================================
@@ -58,7 +61,6 @@ private:
     bool gameOver = false;
     bool bIsMoving = false;
     bool hasPowerUp = false;
-    bool ballResetting = false;
     bool titleLoading = false;
     bool bIsOnPath = false;
     int score;
@@ -71,7 +73,6 @@ private:
     // Game objects
     POWERUP currentPowerUp;
     TextDX dxScoreFont;
-    TextDX dxBallCount;
     Console console;
     Editor* editor;
     AnimationManager m_AnimationManager;
@@ -106,12 +107,9 @@ private:
 
     // ball shadow
     float timer;
-    Image shadowBallImage;
-    std::vector<VECTOR2> recentBallPositions;
 
     // sprites
     Player player;
-    Ball ball;
     Block block;
 
     // pausing
@@ -157,9 +155,6 @@ public:
     
     // gameplay methods
     void removeBlock(int index);
-    void restartBall();
-    void launchBall();
-    COLOR_ARGB getBallCountColor();
     bool isValidLocation(int x, int y);
     void spawnPowerUp(VECTOR2 position);
     void applyPowerUp();
@@ -171,7 +166,6 @@ public:
     void initButtons();
     void initSprites();
     void initPlayerArrow();
-    void initBall();
     void initUI();
     void initFloor();
     void initMessageSprites();

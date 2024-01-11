@@ -76,9 +76,6 @@ void Fallback::initialize(HWND hwnd)
 	if (dxScoreFont.initialize(graphics, 62, true, false, "Agdasima") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing score font"));
 
-	if (dxBallCount.initialize(graphics, 34, true, false, "Agdasima") == false)
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball count font"));
-
 	// init the console log
 	console.initialize(graphics);
 
@@ -167,8 +164,6 @@ void Fallback::initSprites() {
 	initPlayerArrow();
 	// set up the blocks
 	initFloor();
-	// ball sprites
-	initBall();
 	// ui/hud
 	initUI();
 
@@ -270,30 +265,6 @@ void Fallback::initPlayerArrow()
 
 }
 
-
-//=============================================================================
-// Initialize ball texture/images
-//=============================================================================
-void Fallback::initBall()
-{
-	if (!iconTexture.initialize(graphics, ICONS_PATH))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball texture"));
-	}
-	if (!ball.initialize(this, ballNS::WIDTH, ballNS::HEIGHT, ballNS::TEXTURE_COLS, &iconTexture))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball entity"));
-	}
-	ball.setCurrentFrame(0);
-
-	// ball shadow image
-	if (!shadowBallImage.initialize(graphics, ballNS::WIDTH, ballNS::HEIGHT, ballNS::TEXTURE_COLS, &iconTexture))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball shadow image"));
-	}
-	shadowBallImage.setCurrentFrame(4);
-
-}
 
 void Fallback::initUI()
 {
@@ -722,11 +693,9 @@ void Fallback::applyPowerUp()
 	StrongAnimationPtr anim;
 	switch (currentPowerUp) {
 		case ZOOM:
-			ball.applyPowerUp(currentPowerUp);
 			player.applyPowerUp(currentPowerUp);
 			break;
-		case SLOW: // slow ball
-			ball.applyPowerUp(currentPowerUp);
+		case SLOW: // slow 
 		case FAST: // same as below
 		case WARP:
 			player.applyPowerUp(currentPowerUp);
@@ -756,7 +725,6 @@ void Fallback::removePowerUp()
 		switch (currentPowerUp) {
 			case ZOOM: // ball speed
 			case SLOW: // ball speed
-				ball.removePowerUp();
 			case FAST: // ship speed
 				player.resetSpeed();
 				break;
@@ -816,42 +784,6 @@ bool Fallback::isGameOver()
 	return true;
 }
 
-//=============================================================================
-// Reset things so a new ball works like the beginning of the game
-//=============================================================================
-void Fallback::loseBall()
-{
-	ballCount--;
-
-	// shake ship and bg for feedback
-	shakeScreen();
-
-	if (isGameOver()) {
-		handleGameOver();
-	} else {
-		// clean up, restart ball
-		audio->playCue(LOSE_BALL);
-
-		// we lose power ups
-		if (hasPowerUp) {
-			removePowerUp();
-		}
-
-		// remove falling power up, too
-		if (fallingPowerUpPtr) {
-			const Vector2 place = fallingPowerUpPtr->getPosition();
-			explosionManager.spawnExplosion(this, &iconTexture, { place.x, place.y });
-			SAFE_DELETE(fallingPowerUpPtr);
-		}
-
-		// bounce ball UI icon
-		StrongAnimationPtr animPtr = std::make_shared<PunchScale>(&ballCountIcon, 0.2f, 1.5f);
-		m_AnimationManager.attachProcess(animPtr);
-
-		restartBall();
-	}
-}
-
 void Fallback::shakeScreen()
 {
 	Vector2 shakeLimits = { 10.0f, 10.0f };
@@ -880,21 +812,6 @@ void Fallback::handleGameOver()
 	explosionManager.spawnExplosion(this, &iconTexture, { player.getX() + player.getCenterX(), player.getCenterY() });
 }
 
-//=============================================================================
-// Sets the ball at the staring position on top of the ship, awaiting input to launch
-//=============================================================================
-void Fallback::restartBall()
-{
-	ballResetting = true;
-	recentBallPositions.clear();
-}
-
-void Fallback::launchBall()
-{
-	ball.launch();
-	ballResetting = false;
-	audio->playCue(BOUNCE_SHIP);
-}
 
 //=============================================================================
 // Artificial Intelligence
@@ -965,7 +882,7 @@ void Fallback::removeBlock(int index)
 	explosionManager.spawnExplosion(this, &iconTexture, pos);
 
 	// destroying blocks increases the ball speed
-	ball.bumpSpeedUp();
+	//ball.bumpSpeedUp();
 
 	// no power up entity in play and ship has no powerup
 	if (fallingPowerUpPtr == NULL && !hasPowerUp) {
@@ -1154,22 +1071,6 @@ void Fallback::renderUI()
 	//}
 }
 
-COLOR_ARGB Fallback::getBallCountColor()
-{
-	switch (ballCount) {
-		case 1:
-			return graphicsNS::FB_HARD;
-			break;
-		case 2:
-			return graphicsNS::FB_STRONG;
-			break;
-		case 3:
-			return graphicsNS::FB_INVINCIBLE;
-			break;
-	}
-
-	return graphicsNS::WHITE;
-}
 
 /// <summary>
 /// Checks a given x, y location for an existing floor tile
@@ -1325,7 +1226,6 @@ void Fallback::releaseAll()
 	logoTexture.onLostDevice();
 
 	dxScoreFont.onLostDevice();
-	dxBallCount.onLostDevice();
 	console.onLostDevice();
 
 	Game::releaseAll();
@@ -1350,7 +1250,6 @@ void Fallback::resetAll()
 	logoTexture.onResetDevice();
 
 	dxScoreFont.onResetDevice();
-	dxBallCount.onResetDevice();
 	console.onResetDevice();
 
 	Game::resetAll();
