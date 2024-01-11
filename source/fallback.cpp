@@ -30,7 +30,6 @@ Fallback::Fallback()
 {
 	editor = new Editor();
 	fallingPowerUpPtr = NULL;
-	racerSpawnTimer = 0;
 	hasPowerUp = false;
 	bIsMoving = false;
 	bIsOnPath = false;
@@ -52,7 +51,6 @@ Fallback::~Fallback()
 	releaseAll();           // call onLostDevice() for every graphics item
 
 	// remove all running animations
-	racers.clear();
 	turnables.clear();
 	console.resetLog();
 
@@ -112,7 +110,6 @@ void Fallback::startNewGame()
 	m_AnimationManager.clearAllProcesses();
 	explosionManager.clearAllParticles();
 	console.resetLog();
-	racers.clear();
 
 	// reset game variables
 	resetGame();
@@ -153,7 +150,6 @@ void Fallback::exitGame()
 	// clean up game
 	blocks.clear();
 	turnables.clear();
-	racers.clear();
 
 	SAFE_DELETE(fallingPowerUpPtr);
 
@@ -558,11 +554,6 @@ void Fallback::update(float frameTime)
 		m_AnimationManager.updateProcesses(frameTime);
 	}
 
-	// Always update the following
-	// every 5 seconds there is a chance to spawn racers
-	if (!isPaused) {
-	}
-
 	// check if we want to exit
 	checkForExit();
 }
@@ -699,57 +690,6 @@ void Fallback::updateEffects(float frameTime)
 	m_AnimationManager.updateProcesses(frameTime);
 }
 #pragma endregion
-
-#pragma region Racers
-void Fallback::spawnRacers()
-{
-	// chance
-	srand((unsigned)time(0));
-	int numberToSpawn = 0;
-
-	numberToSpawn = 3; // rand() % 4;
-	Vector2 position = { GAME_WIDTH, rand() % GAME_HEIGHT };
-	for (int i = 0; i < numberToSpawn; i++) {
-		spawnRacerAnimation(position);
-		position.x += 25;
-		position.y += 3;
-	}
-
-}
-
-void Fallback::spawnRacerAnimation(Vector2 startPos)
-{
-	Image racersImage;
-	racersImage.myId = ++animId;
-
-	if (!racersImage.initialize(graphics, 32, 2, 0, &detailsTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing racers image"));
-
-	racersImage.setPosition(startPos);
-	Vector2 end = startPos;
-	end.x -= GAME_WIDTH + racersImage.getWidth(); // go  832 pixels from start
-
-	racers.push_back(racersImage);
-
-	//  = rand() % 100 + 1;     // v2 in the range 1 to 100
-	StrongAnimationPtr racerMove = std::make_shared<MoveTo>(&racers.back(), rand() % 4 + 2, end);
-	m_AnimationManager.attachProcess(racerMove);
-}
-
-void Fallback::cleanUpRacerList()
-{
-	std::list<Image>::iterator it = racers.begin();
-	while (it != racers.end()) {
-		if (it->canDestroy()) {
-			racers.erase(it++);
-		}
-		if (it != racers.end()) {
-			it++;
-		}
-	}
-}
-#pragma endregion
-
 
 #pragma region PowerUps
 
@@ -1061,7 +1001,6 @@ void Fallback::render()
 				break;
 			case EDITOR:
 				backgroundImage.draw();
-				renderRacers();
 				editor->draw();
 				break;
 		}
@@ -1083,21 +1022,6 @@ void Fallback::renderTitleScreen()
 	console.renderLog();
 }
 
-/// <summary>
-/// Loops thru and renders any background vfx
-/// </summary>
-void Fallback::renderRacers()
-{
-	int i = 0;
-	for (auto& racer : racers) {
-		if (i % 2 == 0) {
-			racer.draw(graphicsNS::ALPHA75);
-		} else {
-			racer.draw();
-		}
-		++i;
-	}
-}
 
 /// <summary>
 /// Preps the move to the gameplay screen

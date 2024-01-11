@@ -55,7 +55,6 @@ private:
     std::vector<Block> blocks;
     std::vector<Turnable> turnables;
     std::vector<Level> levels;
-    std::list<Image> racers;
     bool gameOver = false;
     bool bIsMoving = false;
     bool hasPowerUp = false;
@@ -65,7 +64,6 @@ private:
     int score;
     int ballCount;
     int currentLevel;
-    float racerSpawnTimer;
     float powerUpTimer;
     float powerUpTimeLimit;
     float titleLoadingTimer;
@@ -147,7 +145,6 @@ public:
     void collisions() override;  // "
     void render();  // render game objects
     void renderTitleScreen();
-    void renderRacers();
     void renderGameScreen();
     void renderUI(); // display UI
     void releaseAll();
@@ -157,11 +154,6 @@ public:
     // do game over things
     void shakeScreen();
     void handleGameOver();
-    // periodically spawns details in the bg
-    void spawnRacers();
-    // actually creates the racer animation instances
-    void spawnRacerAnimation(Vector2 position);
-    void cleanUpRacerList();
     
     // gameplay methods
     void removeBlock(int index);
