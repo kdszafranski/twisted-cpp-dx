@@ -53,8 +53,10 @@ Fallback::~Fallback()
 
 	// remove all running animations
 	racers.clear();
-	m_AnimationManager.abortAllProcesses(true);
+	turnables.clear();
 	console.resetLog();
+
+	m_AnimationManager.abortAllProcesses(true);
 
 	SAFE_DELETE(fallingPowerUpPtr);
 	SAFE_DELETE(editor);
@@ -150,6 +152,7 @@ void Fallback::exitGame()
 
 	// clean up game
 	blocks.clear();
+	turnables.clear();
 	racers.clear();
 
 	SAFE_DELETE(fallingPowerUpPtr);
@@ -352,6 +355,11 @@ void Fallback::initFloor()
 	{
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Floor texture"));
 	}
+	// load our texture, reuse it for all Floor Entities
+	if (!turnableTexture.initialize(graphics, TURNABLE_BASE_PATH))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Turnable texture"));
+	}
 }
 
 void Fallback::loadLevelFiles() {
@@ -425,14 +433,25 @@ void Fallback::loadRandomLevel()
 
 	// clear vector
 	blocks.clear();
+	turnables.clear();
 
 	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+
 
 	srand((unsigned)time(0));
 	ePlayerMoveDirection direction = UP;
 	ePlayerMoveDirection lastDirection = direction;
-	int distance = 0;
+	int const distance = 0;
+	
+	currentPosition = makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
 
+	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+	currentPosition = makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
+	currentPosition = makeStraightaway(5, UP, currentPosition.x, currentPosition.y);
+
+
+	/*
 	for (int i = 0; i < 20; i++) {
 		direction = static_cast<ePlayerMoveDirection>( rand() % 4 + 1 );	
 		distance = 3; // rand() % 4 + 2;
@@ -467,7 +486,8 @@ void Fallback::loadRandomLevel()
 			return;
 		}
 	}
-	
+	*/
+
 }
 
 //=============================================================================
@@ -575,7 +595,6 @@ void Fallback::updateTitleScreen(float frameTime)
 
 void Fallback::updateGameScreen(float frameTime) {
 
-
 	player.update(frameTime);
 
 	// update all other sprites to move opposite player move direction
@@ -599,26 +618,14 @@ void Fallback::updateGameScreen(float frameTime) {
 
 	// all floor tiles
 	updateFloorTiles(frameTime, player.moveDirection);
+	updateTurnables(frameTime, player.moveDirection);
 
-	// handle power ups timer
-	//if (hasPowerUp) {
-	//	powerUpTimer += frameTime;
-	//	if (powerUpTimer > POW_TIME_LIMIT) {
-	//		removePowerUp();
-	//	}
-	//}
-
-	// every interval adjust ball trail
-	//timer += frameTime;
-	//if (timer > BALLSHADOW_INTERVAL) {
-	//	recentBallPositions.push_back(VECTOR2(ball.getX(), ball.getY()));
-
-	//	if (recentBallPositions.size() > 5) {
-	//		// remove first
-	//		recentBallPositions.erase(recentBallPositions.begin());
-	//	}
-	//	timer = 0;
-	//}
+	if (input->wasKeyPressed(ROTATE_KEY)) {
+		console.log("Rotate Turnables");
+		for (std::vector<Turnable>::iterator it = turnables.begin(); it != turnables.end(); ++it) {
+			it->rotate();
+		}
+	}
 
 }
 
@@ -637,6 +644,29 @@ void Fallback::updateFloorTiles(float frameTime, ePlayerMoveDirection pDir)
 				break;
 			case LEFT:
 				blocks.at(i).setX(blocks.at(i).getX() + 1);
+				break;
+		}
+	}
+}
+
+void Fallback::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
+{
+	for (std::vector<Turnable>::iterator it = turnables.begin(); it != turnables.end(); ++it) {
+		
+		it->update(frameTime); // resets rotated box status
+
+		switch (pDir) {
+			case UP:
+				it->setY(it->getY() + 1);
+				break;
+			case RIGHT:
+				it->setX(it->getX() - 1);
+				break;
+			case DOWN:
+				it->setY(it->getY() - 1);
+				break;
+			case LEFT:
+				it->setX(it->getX() + 1);
 				break;
 		}
 	}
@@ -942,7 +972,6 @@ void Fallback::collisions()
 	VECTOR2 collisionVector, collisionPosition;
 
 	if (!isPaused) {
-
 		for (int i = 0; i < blocks.size(); i++) {
 			// .at() returns a "reference".. hence a pointer is needed to capture it properly
 			Block* const block = &blocks.at(i);
@@ -954,20 +983,26 @@ void Fallback::collisions()
 
 			if (player.collidesWith(blocks.at(i), collisionVector)) {	
 				bIsOnPath = true;
-				break; // we just need to be on a block
+				return; // we just need to be on a block
 			}
-
-			bIsOnPath = false;
 
 		} // end blocks loop
 
-		//if (bIsOnPath) {
-		//	console.log("On Path");
-		//} else {
-		//	console.log("FELL OFF");
-		//}
+		bIsOnPath = false;
+		
+		// only check these if not on floor tile
+		for (int i = 0; i < turnables.size(); i++) {
 
-		gameOver = isGameOver();
+			if (player.collidesWith(turnables.at(i), collisionVector)) {
+				bIsOnPath = true;
+				console.log("on Turnable");
+				return;
+			}
+			
+		}
+		
+		bIsOnPath = false;
+		gameOver = true;
 
 	}
 
@@ -1133,6 +1168,10 @@ void Fallback::renderGameScreen()
 		blocks.at(i).draw();
 	}
 
+	for (int i = 0; i < turnables.size(); i++) {
+		turnables.at(i).draw();
+	}
+
 	if (gameOver) {
 		// show message
 		gameOverImage.draw();
@@ -1225,6 +1264,8 @@ bool Fallback::isValidLocation(int x, int y)
 		}
 	}
 
+	// @TODO add turnables
+
 	return true;
 }
 
@@ -1281,6 +1322,37 @@ Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction,
 	return { x, y };
 }
 
+Vec2Int Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
+{
+	Turnable turner;
+	int nextX = x;
+	int nextY = y;
+
+	if (!turner.initialize(this, turnableNS::WIDTH, turnableNS::HEIGHT, turnableNS::TEXTURE_COLS, &turnableTexture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
+	}
+
+	switch (lastDirection) {
+		case UP:
+			y -= blockNS::HEIGHT * 2; // x,y is the next block space, so move up again
+			nextY -= turnableNS::HEIGHT;
+		case DOWN:
+			//turner.rotate();
+			break;
+
+	}
+
+	turner.setPosition(x, y);
+	turner.setVelocity(VECTOR2(0, 0));
+
+	turnables.push_back(turner);
+
+	return { nextX, nextY };
+
+
+}
+
 //=============================================================================
 // ESC key quits the game
 //=============================================================================
@@ -1322,6 +1394,7 @@ void Fallback::releaseAll()
 	iconTexture.onLostDevice();
 	playerTexture.onLostDevice();
 	floorTexture.onLostDevice();
+	turnableTexture.onLostDevice();
 	buttonTexture.onLostDevice();
 	gameOverTexture.onLostDevice();
 	detailsTexture.onLostDevice();
@@ -1347,6 +1420,7 @@ void Fallback::resetAll()
 	playerTexture.onResetDevice();
 	detailsTexture.onResetDevice();
 	floorTexture.onResetDevice();
+	turnableTexture.onResetDevice();
 	buttonTexture.onResetDevice();
 	gameOverTexture.onResetDevice();
 	logoTexture.onResetDevice();

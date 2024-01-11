@@ -17,6 +17,7 @@
 #include "Player.h"
 #include "ball.h"
 #include "block.h"
+#include "turnable.h"
 #include "textDX.h"
 #include "button.h"
 #include "textButton.h"
@@ -52,6 +53,7 @@ private:
     int animId;
 
     std::vector<Block> blocks;
+    std::vector<Turnable> turnables;
     std::vector<Level> levels;
     std::list<Image> racers;
     bool gameOver = false;
@@ -85,6 +87,7 @@ private:
     TextureManager playerTexture;
     TextureManager detailsTexture;
     TextureManager floorTexture;
+    TextureManager turnableTexture;
     TextureManager buttonTexture;
     TextureManager gameOverTexture;
     TextureManager powerUpTexture;
@@ -133,6 +136,8 @@ public:
     void updateTitleScreen(float frameTime);
     void updateGameScreen(float frameTime);
     void updateFloorTiles(float frameTime, ePlayerMoveDirection pDir);
+
+    void updateTurnables(float frameTime, ePlayerMoveDirection pDir);
 
     void updateGameOverScreen(float frameTime);
     // update extraneous elements
@@ -203,6 +208,7 @@ public:
 
     // maze gen methods
     Vec2Int makeStraightaway(int distance, ePlayerMoveDirection direction, int x, int y);
+    Vec2Int makeTurnable(ePlayerMoveDirection lastDirection, int x, int y);
 
     // helper to handle exit inputs
     void checkForExit(); 

@@ -24,7 +24,7 @@ Entity::Entity() : Image()
     deltaV.y = 0.0;
     active = true;                  // the entity is active
     rotatedBoxReady = false;
-    collisionType = entityNS::CIRCLE;
+    //collisionType = entityNS::CIRCLE;
     health = 0;
     pointValue = 0;
     gravity = entityNS::GRAVITY;
@@ -172,6 +172,7 @@ bool Entity::collideBox(Entity &ent, VECTOR2 &collisionVector)
         collisionVector = *ent.getCenter() - *getCenter();
         return true;
     }
+
     return false;
 
 

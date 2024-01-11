@@ -51,6 +51,7 @@ const char LOGO_PATH[] = "images\\Logo.png";
 const char PLAYER_PATH[] = "images\\Playerarrow.png";
 const char RACER_PATH[] = "images\\racers.png";
 const char TILE_PATH[] = "images\\Floor.png";
+const char TURNABLE_BASE_PATH[] = "images\\3LongShape.png";
 const char NG_BUTTON_PATH[] = "images\\buttons.png";
 const char POWERUP_PATH[] = "images\\powerup-letters.png";
 
@@ -105,5 +106,6 @@ const UCHAR PLAYER_RIGHT_KEY = VK_RIGHT;    // right arrow
 const UCHAR PLAYER_DOWN_KEY = VK_DOWN;       // up arrow
 const UCHAR PLAYER_UP_KEY = VK_UP;
 const UCHAR SPACE_KEY = VK_SPACE;     // down arrow
+const UCHAR ROTATE_KEY = 0x46; // F key?
 
 #endif
