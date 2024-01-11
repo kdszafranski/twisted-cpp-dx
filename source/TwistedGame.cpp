@@ -6,12 +6,11 @@
 // Charles Kelly
 
 using namespace std;
-#include "fallback.h"
+#include "TwistedGame.h"
 #include <time.h>
 #include "level.h"
 #include <fstream>
 #include <iostream>
-#include "editor.h"
 #include "fileHandler.h"
 #include "Explosion.h"
 // Animations
@@ -26,11 +25,9 @@ using namespace std;
 //=============================================================================
 // Constructor
 //=============================================================================
-Fallback::Fallback()
+TwistedGame::TwistedGame()
 {
-	editor = new Editor();
 	fallingPowerUpPtr = NULL;
-	racerSpawnTimer = 0;
 	hasPowerUp = false;
 	bIsMoving = false;
 	bIsOnPath = false;
@@ -47,19 +44,17 @@ Fallback::Fallback()
 //=============================================================================
 // Destructor
 //=============================================================================
-Fallback::~Fallback()
+TwistedGame::~TwistedGame()
 {
 	releaseAll();           // call onLostDevice() for every graphics item
 
 	// remove all running animations
-	racers.clear();
 	turnables.clear();
 	console.resetLog();
 
 	m_AnimationManager.abortAllProcesses(true);
 
 	SAFE_DELETE(fallingPowerUpPtr);
-	SAFE_DELETE(editor);
 }
 
 
@@ -67,7 +62,7 @@ Fallback::~Fallback()
 // Initializes the game
 // Throws GameError on error
 //=============================================================================
-void Fallback::initialize(HWND hwnd)
+void TwistedGame::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
 
@@ -77,9 +72,6 @@ void Fallback::initialize(HWND hwnd)
 	// Init DirectX font 
 	if (dxScoreFont.initialize(graphics, 62, true, false, "Agdasima") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing score font"));
-
-	if (dxBallCount.initialize(graphics, 34, true, false, "Agdasima") == false)
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball count font"));
 
 	// init the console log
 	console.initialize(graphics);
@@ -100,7 +92,7 @@ void Fallback::initialize(HWND hwnd)
 /// <summary>
 /// Begins a new game from the Title Screen
 /// </summary>
-void Fallback::startNewGame()
+void TwistedGame::startNewGame()
 {
 	// set proper bg screen state
 	setGameScreen();
@@ -112,7 +104,6 @@ void Fallback::startNewGame()
 	m_AnimationManager.clearAllProcesses();
 	explosionManager.clearAllParticles();
 	console.resetLog();
-	racers.clear();
 
 	// reset game variables
 	resetGame();
@@ -126,7 +117,7 @@ void Fallback::startNewGame()
 /// <summary>
 /// Resets score, board, and general game state
 /// </summary>
-void Fallback::resetGame()
+void TwistedGame::resetGame()
 {
 	hasPowerUp = false;
 	gameOver = false;
@@ -140,7 +131,7 @@ void Fallback::resetGame()
 	console.resetLog();
 }
 
-void Fallback::exitGame()
+void TwistedGame::exitGame()
 {
 	//console.log("");
 	isPaused = false;
@@ -153,7 +144,6 @@ void Fallback::exitGame()
 	// clean up game
 	blocks.clear();
 	turnables.clear();
-	racers.clear();
 
 	SAFE_DELETE(fallingPowerUpPtr);
 
@@ -164,15 +154,13 @@ void Fallback::exitGame()
 //=============================================================================
 // Initializes all the game sprites from textures
 //=============================================================================
-void Fallback::initSprites() {
+void TwistedGame::initSprites() {
 	// misc graphics
 	initMessageSprites();
 	// create our game object and graphics
 	initPlayerArrow();
 	// set up the blocks
 	initFloor();
-	// ball sprites
-	initBall();
 	// ui/hud
 	initUI();
 
@@ -188,7 +176,7 @@ void Fallback::initSprites() {
 /// <summary>
 /// Load background image(s)
 /// </summary>
-void Fallback::initBackgrounds()
+void TwistedGame::initBackgrounds()
 {
 	// background texture
 	if (!backgroundTexture.initialize(graphics, BG_PATH))
@@ -215,7 +203,7 @@ void Fallback::initBackgrounds()
 	//titleImage.setColorFilter(graphicsNS::WHITE & graphicsNS::ALPHA25);
 }
 
-void Fallback::initButtons()
+void TwistedGame::initButtons()
 {
 	// buttons texture
 	if (!buttonTexture.initialize(graphics, NG_BUTTON_PATH))
@@ -233,7 +221,7 @@ void Fallback::initButtons()
 
 }
 
-void Fallback::initMessageSprites()
+void TwistedGame::initMessageSprites()
 {
 	// background texture
 	if (!gameOverTexture.initialize(graphics, GAME_OVER_PATH))
@@ -255,7 +243,7 @@ void Fallback::initMessageSprites()
 //=============================================================================
 // Player texture and entity init
 //=============================================================================
-void Fallback::initPlayerArrow()
+void TwistedGame::initPlayerArrow()
 {
 	if (!playerTexture.initialize(graphics, PLAYER_PATH)) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player texture"));
@@ -275,31 +263,7 @@ void Fallback::initPlayerArrow()
 }
 
 
-//=============================================================================
-// Initialize ball texture/images
-//=============================================================================
-void Fallback::initBall()
-{
-	if (!iconTexture.initialize(graphics, ICONS_PATH))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball texture"));
-	}
-	if (!ball.initialize(this, ballNS::WIDTH, ballNS::HEIGHT, ballNS::TEXTURE_COLS, &iconTexture))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball entity"));
-	}
-	ball.setCurrentFrame(0);
-
-	// ball shadow image
-	if (!shadowBallImage.initialize(graphics, ballNS::WIDTH, ballNS::HEIGHT, ballNS::TEXTURE_COLS, &iconTexture))
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ball shadow image"));
-	}
-	shadowBallImage.setCurrentFrame(4);
-
-}
-
-void Fallback::initUI()
+void TwistedGame::initUI()
 {
 	// ball count icon image
 	if (!ballCountIcon.initialize(this->graphics, ballNS::WIDTH, ballNS::HEIGHT, ballNS::TEXTURE_COLS, &iconTexture))
@@ -348,7 +312,7 @@ void Fallback::initUI()
 //=============================================================================
 // Initialize block texture/images
 //=============================================================================
-void Fallback::initFloor()
+void TwistedGame::initFloor()
 {
 	// load our texture, reuse it for all Floor Entities
 	if (!floorTexture.initialize(graphics, TILE_PATH))
@@ -362,7 +326,7 @@ void Fallback::initFloor()
 	}
 }
 
-void Fallback::loadLevelFiles() {
+void TwistedGame::loadLevelFiles() {
 	levels.clear();
 	//loadLevelFromFile(0); // Editor default
 	//loadLevelFromFile(1);
@@ -370,7 +334,7 @@ void Fallback::loadLevelFiles() {
 	//loadLevelFromFile(3);
 }
 
-void Fallback::startNextLevel()
+void TwistedGame::startNextLevel()
 {
 	// nothing to see here
 }
@@ -379,7 +343,7 @@ void Fallback::startNextLevel()
 /// Creates the blocks in the vector from the list given level data which was previously loaded
 /// </summary>
 /// <param name="levelNumber">number that matches level number</param>
-void Fallback::loadLevel(int levelNumber)
+void TwistedGame::loadLevel(int levelNumber)
 {
 	const int START_X = 114;
 	const int START_Y = 100;
@@ -425,7 +389,7 @@ void Fallback::loadLevel(int levelNumber)
 /// <summary>
 /// Generates text paths
 /// </summary>
-void Fallback::loadRandomLevel()
+void TwistedGame::loadRandomLevel()
 {
 	const int START_X = GAME_WIDTH / 2 - blockNS::WIDTH / 2;
 	const int START_Y = GAME_HEIGHT / 2 - blockNS::HEIGHT / 2;
@@ -493,7 +457,7 @@ void Fallback::loadRandomLevel()
 //=============================================================================
 // Loads a level from disk
 //=============================================================================
-bool Fallback::loadLevelFromFile(int n)
+bool TwistedGame::loadLevelFromFile(int n)
 {
 	Level loadedLevel;
 	FileHandler loader;
@@ -520,7 +484,7 @@ bool Fallback::loadLevelFromFile(int n)
 //=============================================================================
 // Update all game items
 //=============================================================================
-void Fallback::update(float frameTime)
+void TwistedGame::update(float frameTime)
 {
 	// handle inputs on Title Screen only
 	if (currentScreen == TITLE) {
@@ -552,17 +516,6 @@ void Fallback::update(float frameTime)
 
 	} // GAME screen
 
-	if (currentScreen == EDITOR) {
-		editor->update(frameTime);
-		// process animations
-		m_AnimationManager.updateProcesses(frameTime);
-	}
-
-	// Always update the following
-	// every 5 seconds there is a chance to spawn racers
-	if (!isPaused) {
-	}
-
 	// check if we want to exit
 	checkForExit();
 }
@@ -571,7 +524,7 @@ void Fallback::update(float frameTime)
 /// Updates elements for the title screen only, including a timer for some elements
 /// </summary>
 /// <param name="frameTime">current frame time</param>
-void Fallback::updateTitleScreen(float frameTime)
+void TwistedGame::updateTitleScreen(float frameTime)
 {
 	// wait for bg and title to fade in
 	titleLoadingTimer += frameTime;
@@ -593,7 +546,7 @@ void Fallback::updateTitleScreen(float frameTime)
 	}
 }
 
-void Fallback::updateGameScreen(float frameTime) {
+void TwistedGame::updateGameScreen(float frameTime) {
 
 	player.update(frameTime);
 
@@ -629,7 +582,7 @@ void Fallback::updateGameScreen(float frameTime) {
 
 }
 
-void Fallback::updateFloorTiles(float frameTime, ePlayerMoveDirection pDir)
+void TwistedGame::updateFloorTiles(float frameTime, ePlayerMoveDirection pDir)
 {
 	for (int i = 0; i < blocks.size(); i++) {
 		switch (pDir) {
@@ -649,7 +602,7 @@ void Fallback::updateFloorTiles(float frameTime, ePlayerMoveDirection pDir)
 	}
 }
 
-void Fallback::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
+void TwistedGame::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
 {
 	for (std::vector<Turnable>::iterator it = turnables.begin(); it != turnables.end(); ++it) {
 		
@@ -672,7 +625,7 @@ void Fallback::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
 	}
 }
 
-void Fallback::updateGameOverScreen(float frameTime)
+void TwistedGame::updateGameOverScreen(float frameTime)
 {
 	// pick out a block and bounce it
 	timer += frameTime;
@@ -682,7 +635,7 @@ void Fallback::updateGameOverScreen(float frameTime)
 /// Updates particles and effects
 /// </summary>
 /// <param name="frameTime">current frame time</param>
-void Fallback::updateEffects(float frameTime)
+void TwistedGame::updateEffects(float frameTime)
 {
 	// update these unless paused	
 	if (fallingPowerUpPtr) {
@@ -700,61 +653,10 @@ void Fallback::updateEffects(float frameTime)
 }
 #pragma endregion
 
-#pragma region Racers
-void Fallback::spawnRacers()
-{
-	// chance
-	srand((unsigned)time(0));
-	int numberToSpawn = 0;
-
-	numberToSpawn = 3; // rand() % 4;
-	Vector2 position = { GAME_WIDTH, rand() % GAME_HEIGHT };
-	for (int i = 0; i < numberToSpawn; i++) {
-		spawnRacerAnimation(position);
-		position.x += 25;
-		position.y += 3;
-	}
-
-}
-
-void Fallback::spawnRacerAnimation(Vector2 startPos)
-{
-	Image racersImage;
-	racersImage.myId = ++animId;
-
-	if (!racersImage.initialize(graphics, 32, 2, 0, &detailsTexture))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing racers image"));
-
-	racersImage.setPosition(startPos);
-	Vector2 end = startPos;
-	end.x -= GAME_WIDTH + racersImage.getWidth(); // go  832 pixels from start
-
-	racers.push_back(racersImage);
-
-	//  = rand() % 100 + 1;     // v2 in the range 1 to 100
-	StrongAnimationPtr racerMove = std::make_shared<MoveTo>(&racers.back(), rand() % 4 + 2, end);
-	m_AnimationManager.attachProcess(racerMove);
-}
-
-void Fallback::cleanUpRacerList()
-{
-	std::list<Image>::iterator it = racers.begin();
-	while (it != racers.end()) {
-		if (it->canDestroy()) {
-			racers.erase(it++);
-		}
-		if (it != racers.end()) {
-			it++;
-		}
-	}
-}
-#pragma endregion
-
-
 #pragma region PowerUps
 
 // Creates the Entity on the screen
-void Fallback::spawnPowerUp(VECTOR2 position)
+void TwistedGame::spawnPowerUp(VECTOR2 position)
 {
 	// spawn powerup
 	if (fallingPowerUpPtr == NULL) {
@@ -765,7 +667,7 @@ void Fallback::spawnPowerUp(VECTOR2 position)
 }
 
 // applies the collided Power up
-void Fallback::applyPowerUp()
+void TwistedGame::applyPowerUp()
 {
 	hasPowerUp = true;
 	audio->playCue(POWER_UP);
@@ -782,11 +684,9 @@ void Fallback::applyPowerUp()
 	StrongAnimationPtr anim;
 	switch (currentPowerUp) {
 		case ZOOM:
-			ball.applyPowerUp(currentPowerUp);
 			player.applyPowerUp(currentPowerUp);
 			break;
-		case SLOW: // slow ball
-			ball.applyPowerUp(currentPowerUp);
+		case SLOW: // slow 
 		case FAST: // same as below
 		case WARP:
 			player.applyPowerUp(currentPowerUp);
@@ -810,13 +710,12 @@ void Fallback::applyPowerUp()
 	m_AnimationManager.attachProcess(bounce);
 }
 
-void Fallback::removePowerUp()
+void TwistedGame::removePowerUp()
 {
 	if (hasPowerUp) {
 		switch (currentPowerUp) {
 			case ZOOM: // ball speed
 			case SLOW: // ball speed
-				ball.removePowerUp();
 			case FAST: // ship speed
 				player.resetSpeed();
 				break;
@@ -840,7 +739,7 @@ void Fallback::removePowerUp()
 }
 #pragma endregion
 
-void Fallback::checkPauseInput()
+void TwistedGame::checkPauseInput()
 {
 	if (currentScreen == GAME) {
 		// SPACE pauses
@@ -852,7 +751,7 @@ void Fallback::checkPauseInput()
 }
 
 
-void Fallback::checkCheatInput()
+void TwistedGame::checkCheatInput()
 {
 	if (currentScreen == GAME) {
 		// next level
@@ -866,7 +765,7 @@ void Fallback::checkCheatInput()
 	}
 }
 
-bool Fallback::isGameOver()
+bool TwistedGame::isGameOver()
 {
 	// we're good until we fall off
 	if (bIsOnPath) {		
@@ -876,43 +775,7 @@ bool Fallback::isGameOver()
 	return true;
 }
 
-//=============================================================================
-// Reset things so a new ball works like the beginning of the game
-//=============================================================================
-void Fallback::loseBall()
-{
-	ballCount--;
-
-	// shake ship and bg for feedback
-	shakeScreen();
-
-	if (isGameOver()) {
-		handleGameOver();
-	} else {
-		// clean up, restart ball
-		audio->playCue(LOSE_BALL);
-
-		// we lose power ups
-		if (hasPowerUp) {
-			removePowerUp();
-		}
-
-		// remove falling power up, too
-		if (fallingPowerUpPtr) {
-			const Vector2 place = fallingPowerUpPtr->getPosition();
-			explosionManager.spawnExplosion(this, &iconTexture, { place.x, place.y });
-			SAFE_DELETE(fallingPowerUpPtr);
-		}
-
-		// bounce ball UI icon
-		StrongAnimationPtr animPtr = std::make_shared<PunchScale>(&ballCountIcon, 0.2f, 1.5f);
-		m_AnimationManager.attachProcess(animPtr);
-
-		restartBall();
-	}
-}
-
-void Fallback::shakeScreen()
+void TwistedGame::shakeScreen()
 {
 	Vector2 shakeLimits = { 10.0f, 10.0f };
 	StrongAnimationPtr shipShake = std::make_shared<Shake>(&player, 0.5, shakeLimits);
@@ -924,7 +787,7 @@ void Fallback::shakeScreen()
 /// <summary>
 /// Handles game over tasks and animations
 /// </summary>
-void Fallback::handleGameOver()
+void TwistedGame::handleGameOver()
 {
 	audio->playCue(GAME_OVER);
 	// show screen
@@ -940,32 +803,17 @@ void Fallback::handleGameOver()
 	explosionManager.spawnExplosion(this, &iconTexture, { player.getX() + player.getCenterX(), player.getCenterY() });
 }
 
-//=============================================================================
-// Sets the ball at the staring position on top of the ship, awaiting input to launch
-//=============================================================================
-void Fallback::restartBall()
-{
-	ballResetting = true;
-	recentBallPositions.clear();
-}
-
-void Fallback::launchBall()
-{
-	ball.launch();
-	ballResetting = false;
-	audio->playCue(BOUNCE_SHIP);
-}
 
 //=============================================================================
 // Artificial Intelligence
 //=============================================================================
-void Fallback::ai()
+void TwistedGame::ai()
 {}
 
 //=============================================================================
 // Handle collisions
 //=============================================================================
-void Fallback::collisions()
+void TwistedGame::collisions()
 {
 	if (isGameOver()) return; // no need to do this if we're done
 
@@ -1011,7 +859,7 @@ void Fallback::collisions()
 //=============================================================================
 // Remove block that was hit by the ball
 //=============================================================================
-void Fallback::removeBlock(int index)
+void TwistedGame::removeBlock(int index)
 {
 	audio->playCue(DESTROY_BLOCK);
 
@@ -1025,7 +873,7 @@ void Fallback::removeBlock(int index)
 	explosionManager.spawnExplosion(this, &iconTexture, pos);
 
 	// destroying blocks increases the ball speed
-	ball.bumpSpeedUp();
+	//ball.bumpSpeedUp();
 
 	// no power up entity in play and ship has no powerup
 	if (fallingPowerUpPtr == NULL && !hasPowerUp) {
@@ -1037,7 +885,7 @@ void Fallback::removeBlock(int index)
 
 }
 
-void Fallback::checkGameOver()
+void TwistedGame::checkGameOver()
 {
 
 	return;
@@ -1046,7 +894,7 @@ void Fallback::checkGameOver()
 //=============================================================================
 // Render game items
 //=============================================================================
-void Fallback::render()
+void TwistedGame::render()
 {
 	try {
 		graphics->spriteBegin();
@@ -1059,10 +907,6 @@ void Fallback::render()
 			case GAME:
 				renderGameScreen();
 				break;
-			case EDITOR:
-				backgroundImage.draw();
-				renderRacers();
-				editor->draw();
 				break;
 		}
 
@@ -1074,7 +918,7 @@ void Fallback::render()
 
 }
 
-void Fallback::renderTitleScreen()
+void TwistedGame::renderTitleScreen()
 {
 	backgroundImage.draw();
 	newGameButton.draw();
@@ -1083,26 +927,11 @@ void Fallback::renderTitleScreen()
 	console.renderLog();
 }
 
-/// <summary>
-/// Loops thru and renders any background vfx
-/// </summary>
-void Fallback::renderRacers()
-{
-	int i = 0;
-	for (auto& racer : racers) {
-		if (i % 2 == 0) {
-			racer.draw(graphicsNS::ALPHA75);
-		} else {
-			racer.draw();
-		}
-		++i;
-	}
-}
 
 /// <summary>
 /// Preps the move to the gameplay screen
 /// </summary>
-void Fallback::setGameScreen()
+void TwistedGame::setGameScreen()
 {
 	// shift to next sprite frame for the game bg
 	backgroundImage.setX(-static_cast<int>(GAME_WIDTH));
@@ -1110,16 +939,10 @@ void Fallback::setGameScreen()
 	currentScreen = GAME;
 }
 
-void Fallback::setEditorScreen()
-{
-	backgroundImage.setX(-static_cast<int>(GAME_WIDTH));
-	currentScreen = EDITOR;
-}
-
 /// <summary>
 /// Preps to move to the Title Screen
 /// </summary>
-void Fallback::setTitleScreen()
+void TwistedGame::setTitleScreen()
 {
 	currentScreen = TITLE;
 	titleLoading = true;
@@ -1138,28 +961,8 @@ void Fallback::setTitleScreen()
 
 }
 
-void Fallback::launchEditor()
-{
-	if (!floorTexture.getTexture()) {
-		initFloor();
-	}
 
-	// share our stuff
-	if (editor->initialized == false) {
-		if (editor->initialize(this, &buttonTexture, &floorTexture, &console)) {
-			// TODO handle error
-		}
-	}
-
-	if (editor->initialized) {
-		// let's go!
-		editor->start();
-		setEditorScreen();
-	}
-
-}
-
-void Fallback::renderGameScreen()
+void TwistedGame::renderGameScreen()
 {
 	backgroundImage.draw();
 
@@ -1190,7 +993,7 @@ void Fallback::renderGameScreen()
 	console.renderLog();
 }
 
-void Fallback::renderUI()
+void TwistedGame::renderUI()
 {
 	logoImage.draw();
 	//RECT scoreRect;
@@ -1230,22 +1033,6 @@ void Fallback::renderUI()
 	//}
 }
 
-COLOR_ARGB Fallback::getBallCountColor()
-{
-	switch (ballCount) {
-		case 1:
-			return graphicsNS::FB_HARD;
-			break;
-		case 2:
-			return graphicsNS::FB_STRONG;
-			break;
-		case 3:
-			return graphicsNS::FB_INVINCIBLE;
-			break;
-	}
-
-	return graphicsNS::WHITE;
-}
 
 /// <summary>
 /// Checks a given x, y location for an existing floor tile
@@ -1253,7 +1040,7 @@ COLOR_ARGB Fallback::getBallCountColor()
 /// <param name="x"></param>
 /// <param name="y"></param>
 /// <returns>true if no tile is found, false if a tile is found</returns>
-bool Fallback::isValidLocation(int x, int y)
+bool TwistedGame::isValidLocation(int x, int y)
 {
 	// go thru all blocks and check for this x, y position
 	for (int j = 0; j < blocks.size(); j++) {
@@ -1269,7 +1056,7 @@ bool Fallback::isValidLocation(int x, int y)
 	return true;
 }
 
-Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction, int startX, int startY)
+Vec2Int TwistedGame::makeStraightaway(int distance, ePlayerMoveDirection direction, int startX, int startY)
 {
 	int x = startX;
 	int y = startY;
@@ -1322,7 +1109,7 @@ Vec2Int Fallback::makeStraightaway(int distance, ePlayerMoveDirection direction,
 	return { x, y };
 }
 
-Vec2Int Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
+Vec2Int TwistedGame::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
 {
 	Turnable turner;
 	int nextX = x;
@@ -1356,7 +1143,7 @@ Vec2Int Fallback::makeTurnable(ePlayerMoveDirection lastDirection, int x, int y)
 //=============================================================================
 // ESC key quits the game
 //=============================================================================
-void Fallback::checkForExit() {
+void TwistedGame::checkForExit() {
 	// ESC key always quits
 	if (input->wasKeyPressed(ESC_KEY)) {
 		switch (currentScreen) {
@@ -1368,26 +1155,15 @@ void Fallback::checkForExit() {
 				// faster for testing
 				//PostQuitMessage(0);
 				break;
-			case EDITOR:
-				exitEditor();
-				break;
 		}
 	}
-}
-
-void Fallback::exitEditor()
-{
-	// clean up
-	console.log("");
-	//loadLevelFiles();
-	setTitleScreen();
 }
 
 //=============================================================================
 // The graphics device was lost.
 // Release all reserved video memory so graphics device may be reset.
 //=============================================================================
-void Fallback::releaseAll()
+void TwistedGame::releaseAll()
 {
 	backgroundTexture.onLostDevice();
 	titleTexture.onLostDevice();
@@ -1401,7 +1177,6 @@ void Fallback::releaseAll()
 	logoTexture.onLostDevice();
 
 	dxScoreFont.onLostDevice();
-	dxBallCount.onLostDevice();
 	console.onLostDevice();
 
 	Game::releaseAll();
@@ -1412,7 +1187,7 @@ void Fallback::releaseAll()
 // The grahics device has been reset.
 // Recreate all surfaces.
 //=============================================================================
-void Fallback::resetAll()
+void TwistedGame::resetAll()
 {
 	backgroundTexture.onResetDevice();
 	titleTexture.onResetDevice();
@@ -1426,7 +1201,6 @@ void Fallback::resetAll()
 	logoTexture.onResetDevice();
 
 	dxScoreFont.onResetDevice();
-	dxBallCount.onResetDevice();
 	console.onResetDevice();
 
 	Game::resetAll();

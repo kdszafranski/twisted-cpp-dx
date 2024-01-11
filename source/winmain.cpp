@@ -11,7 +11,7 @@
 #include <Windows.h>
 #include <stdlib.h>             // for detecting memory leaks
 #include <crtdbg.h>             // for detecting memory leaks
-#include "fallback.h"
+#include "TwistedGame.h"
 
 // Function prototypes
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int); 
@@ -20,7 +20,7 @@ LRESULT WINAPI WinProc(HWND, UINT, WPARAM, LPARAM);
 
 // Game pointer
 // using a pointer.... this has the broadest scope so.. why?
-Fallback *game = NULL;
+TwistedGame *game = NULL;
 HWND hwnd = NULL;
 
 //=============================================================================
@@ -37,7 +37,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     MSG msg;
 
     // Create the game, sets up message handler
-    game = new Fallback;
+    game = new TwistedGame;
 
     // Create the window
     if (!CreateMainWindow(hwnd, hInstance, nCmdShow))

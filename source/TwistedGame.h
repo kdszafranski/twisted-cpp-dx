@@ -5,6 +5,21 @@
 // Copyright (c) 2011 by: 
 // Charles Kelly
 
+//#ifndef ENUMTHING 
+//#define ENUMTHING
+//// Should be in enums.h but includes are a jumbled uber-mess
+//ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
+//    orig = static_cast<ePlayerMoveDirection>(orig + 1);
+//    if (orig > LEFT) {
+//        orig = UP;
+//        return orig;
+//    } else {
+//        return orig;
+//    }
+//}
+//#endif
+
+
 #ifndef _BREAKOUT_H_             // prevent multiple definitions if this 
 #define _BREAKOUT_H_             // ..file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
@@ -22,29 +37,17 @@
 #include "button.h"
 #include "textButton.h"
 #include "console.h"
-#include "editor.h"
 #include "AnimationManager.h"
 #include "level.h"
 #include "Explosion.h"
 #include <memory>
 #include "PowerUp.h"
 
-// Should be in enums.h but includes are a jumbled uber-mess
-ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
-    orig = static_cast<ePlayerMoveDirection>(orig + 1);
-    if (orig > LEFT) {
-        orig = UP;
-        return orig;
-    } else {
-        return orig;
-    }
-}
-
 
 //=============================================================================
 // Create game class
 //=============================================================================
-class Fallback : public Game
+class TwistedGame : public Game
 {
 private:
     // variables
@@ -55,17 +58,14 @@ private:
     std::vector<Block> blocks;
     std::vector<Turnable> turnables;
     std::vector<Level> levels;
-    std::list<Image> racers;
     bool gameOver = false;
     bool bIsMoving = false;
     bool hasPowerUp = false;
-    bool ballResetting = false;
     bool titleLoading = false;
     bool bIsOnPath = false;
     int score;
     int ballCount;
     int currentLevel;
-    float racerSpawnTimer;
     float powerUpTimer;
     float powerUpTimeLimit;
     float titleLoadingTimer;
@@ -73,9 +73,7 @@ private:
     // Game objects
     POWERUP currentPowerUp;
     TextDX dxScoreFont;
-    TextDX dxBallCount;
     Console console;
-    Editor* editor;
     AnimationManager m_AnimationManager;
     Explosion explosionManager;
     PowerUp* fallingPowerUpPtr;
@@ -97,7 +95,6 @@ private:
     Image gameOverImage;
     Image logoImage;
     Button newGameButton;
-    Button editorButton;
     Button creditsButton;
     // ui images
     Image ballCountXImage;
@@ -108,12 +105,9 @@ private:
 
     // ball shadow
     float timer;
-    Image shadowBallImage;
-    std::vector<VECTOR2> recentBallPositions;
 
     // sprites
     Player player;
-    Ball ball;
     Block block;
 
     // pausing
@@ -122,10 +116,10 @@ private:
 
 public:
     // Constructor
-    Fallback();
+    TwistedGame();
 
     // Destructor
-    virtual ~Fallback();
+    virtual ~TwistedGame();
 
     // Initialize the game
     void initialize(HWND hwnd);
@@ -147,7 +141,6 @@ public:
     void collisions() override;  // "
     void render();  // render game objects
     void renderTitleScreen();
-    void renderRacers();
     void renderGameScreen();
     void renderUI(); // display UI
     void releaseAll();
@@ -157,17 +150,9 @@ public:
     // do game over things
     void shakeScreen();
     void handleGameOver();
-    // periodically spawns details in the bg
-    void spawnRacers();
-    // actually creates the racer animation instances
-    void spawnRacerAnimation(Vector2 position);
-    void cleanUpRacerList();
     
     // gameplay methods
     void removeBlock(int index);
-    void restartBall();
-    void launchBall();
-    COLOR_ARGB getBallCountColor();
     bool isValidLocation(int x, int y);
     void spawnPowerUp(VECTOR2 position);
     void applyPowerUp();
@@ -179,20 +164,14 @@ public:
     void initButtons();
     void initSprites();
     void initPlayerArrow();
-    void initBall();
     void initUI();
     void initFloor();
     void initMessageSprites();
     void setTitleScreen();
     void setGameScreen();
     void exitGame();
-    void setEditorScreen();
     // checks if there are blocks left
     void checkGameOver();
-
-    // Editor
-    void launchEditor();
-    void exitEditor();
 
     // level loading
     void loadLevelFiles();  // loads all levels from disk

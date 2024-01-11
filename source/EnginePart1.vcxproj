@@ -41,9 +41,9 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\Twisted\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\Twisted\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -113,7 +113,6 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="console.cpp" />
     <ClCompile Include="DirectionBounce.cpp" />
-    <ClCompile Include="editor.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="FadeTo.cpp" />
@@ -130,7 +129,7 @@
     <ClCompile Include="ScaleXTo.cpp" />
     <ClCompile Include="Shake.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="fallback.cpp" />
+    <ClCompile Include="TwistedGame.cpp" />
     <ClCompile Include="level.h" />
     <ClCompile Include="textButton.cpp" />
     <ClCompile Include="textDX.cpp" />
@@ -149,7 +148,6 @@
     <ClInclude Include="console.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="DirectionBounce.h" />
-    <ClInclude Include="editor.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="Explosion.h" />
@@ -169,7 +167,7 @@
     <ClInclude Include="PinchScale.h" />
     <ClInclude Include="PunchScale.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="fallback.h" />
+    <ClInclude Include="TwistedGame.h" />
     <ClInclude Include="textButton.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="textureManager.h" />
