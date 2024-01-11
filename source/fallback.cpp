@@ -441,7 +441,7 @@ void Fallback::loadRandomLevel()
 	srand((unsigned)time(0));
 	ePlayerMoveDirection direction = UP;
 	ePlayerMoveDirection lastDirection = direction;
-	int distance = 0;
+	int const distance = 0;
 	
 	currentPosition = makeTurnable(lastDirection, currentPosition.x, currentPosition.y);
 
