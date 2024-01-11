@@ -167,7 +167,7 @@
     <ClInclude Include="PinchScale.h" />
     <ClInclude Include="PunchScale.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="fallback.h" />
+    <ClInclude Include="TwistedGame.h" />
     <ClInclude Include="textButton.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="textureManager.h" />

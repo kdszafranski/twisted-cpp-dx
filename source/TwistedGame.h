@@ -47,7 +47,7 @@
 //=============================================================================
 // Create game class
 //=============================================================================
-class Fallback : public Game
+class TwistedGame : public Game
 {
 private:
     // variables
@@ -116,10 +116,10 @@ private:
 
 public:
     // Constructor
-    Fallback();
+    TwistedGame();
 
     // Destructor
-    virtual ~Fallback();
+    virtual ~TwistedGame();
 
     // Initialize the game
     void initialize(HWND hwnd);
