@@ -37,7 +37,6 @@
 #include "button.h"
 #include "textButton.h"
 #include "console.h"
-#include "editor.h"
 #include "AnimationManager.h"
 #include "level.h"
 #include "Explosion.h"
@@ -75,7 +74,6 @@ private:
     POWERUP currentPowerUp;
     TextDX dxScoreFont;
     Console console;
-    Editor* editor;
     AnimationManager m_AnimationManager;
     Explosion explosionManager;
     PowerUp* fallingPowerUpPtr;
@@ -97,7 +95,6 @@ private:
     Image gameOverImage;
     Image logoImage;
     Button newGameButton;
-    Button editorButton;
     Button creditsButton;
     // ui images
     Image ballCountXImage;
@@ -173,13 +170,8 @@ public:
     void setTitleScreen();
     void setGameScreen();
     void exitGame();
-    void setEditorScreen();
     // checks if there are blocks left
     void checkGameOver();
-
-    // Editor
-    void launchEditor();
-    void exitEditor();
 
     // level loading
     void loadLevelFiles();  // loads all levels from disk

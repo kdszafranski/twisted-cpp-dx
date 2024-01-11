@@ -11,7 +11,6 @@ using namespace std;
 #include "level.h"
 #include <fstream>
 #include <iostream>
-#include "editor.h"
 #include "fileHandler.h"
 #include "Explosion.h"
 // Animations
@@ -28,7 +27,6 @@ using namespace std;
 //=============================================================================
 Fallback::Fallback()
 {
-	editor = new Editor();
 	fallingPowerUpPtr = NULL;
 	hasPowerUp = false;
 	bIsMoving = false;
@@ -57,7 +55,6 @@ Fallback::~Fallback()
 	m_AnimationManager.abortAllProcesses(true);
 
 	SAFE_DELETE(fallingPowerUpPtr);
-	SAFE_DELETE(editor);
 }
 
 
@@ -519,12 +516,6 @@ void Fallback::update(float frameTime)
 
 	} // GAME screen
 
-	if (currentScreen == EDITOR) {
-		editor->update(frameTime);
-		// process animations
-		m_AnimationManager.updateProcesses(frameTime);
-	}
-
 	// check if we want to exit
 	checkForExit();
 }
@@ -916,9 +907,6 @@ void Fallback::render()
 			case GAME:
 				renderGameScreen();
 				break;
-			case EDITOR:
-				backgroundImage.draw();
-				editor->draw();
 				break;
 		}
 
@@ -951,12 +939,6 @@ void Fallback::setGameScreen()
 	currentScreen = GAME;
 }
 
-void Fallback::setEditorScreen()
-{
-	backgroundImage.setX(-static_cast<int>(GAME_WIDTH));
-	currentScreen = EDITOR;
-}
-
 /// <summary>
 /// Preps to move to the Title Screen
 /// </summary>
@@ -979,26 +961,6 @@ void Fallback::setTitleScreen()
 
 }
 
-void Fallback::launchEditor()
-{
-	if (!floorTexture.getTexture()) {
-		initFloor();
-	}
-
-	// share our stuff
-	if (editor->initialized == false) {
-		if (editor->initialize(this, &buttonTexture, &floorTexture, &console)) {
-			// TODO handle error
-		}
-	}
-
-	if (editor->initialized) {
-		// let's go!
-		editor->start();
-		setEditorScreen();
-	}
-
-}
 
 void Fallback::renderGameScreen()
 {
@@ -1193,19 +1155,8 @@ void Fallback::checkForExit() {
 				// faster for testing
 				//PostQuitMessage(0);
 				break;
-			case EDITOR:
-				exitEditor();
-				break;
 		}
 	}
-}
-
-void Fallback::exitEditor()
-{
-	// clean up
-	console.log("");
-	//loadLevelFiles();
-	setTitleScreen();
 }
 
 //=============================================================================
