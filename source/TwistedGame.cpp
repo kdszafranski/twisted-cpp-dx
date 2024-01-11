@@ -36,9 +36,9 @@ TwistedGame::TwistedGame()
 	titleLoading = false;
 	currentPowerUp = FAST; // not actually applied, null would be better
 	animId = 0;
-	timer = 0;
 	score = 0;
 	isPaused = false;
+
 }
 
 //=============================================================================
@@ -108,7 +108,7 @@ void TwistedGame::startNewGame()
 	// reset game variables
 	resetGame();
 
-	loadRandomLevel();
+	//loadRandomLevel();
 
 	// play!
 	//restartBall();
@@ -124,7 +124,6 @@ void TwistedGame::resetGame()
 	isPaused = false;
 	bIsOnPath = true;
 	ballCount = MAX_BALLS;
-	timer = 0;
 	powerUpTimer = 0;
 	score = 0;
 	currentLevel = 0; // points into levels vector, 0 is the first level
@@ -627,8 +626,6 @@ void TwistedGame::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
 
 void TwistedGame::updateGameOverScreen(float frameTime)
 {
-	// pick out a block and bounce it
-	timer += frameTime;
 }
 
 /// <summary>
@@ -887,7 +884,7 @@ void TwistedGame::removeBlock(int index)
 
 void TwistedGame::checkGameOver()
 {
-
+	gameOver = false;
 	return;
 }
 
@@ -967,13 +964,13 @@ void TwistedGame::renderGameScreen()
 	backgroundImage.draw();
 
 	// draw paths
-	for (int i = 0; i < blocks.size(); i++) {
-		blocks.at(i).draw();
-	}
+	//for (int i = 0; i < blocks.size(); i++) {
+	//	blocks.at(i).draw();
+	//}
 
-	for (int i = 0; i < turnables.size(); i++) {
-		turnables.at(i).draw();
-	}
+	//for (int i = 0; i < turnables.size(); i++) {
+	//	turnables.at(i).draw();
+	//}
 
 	if (gameOver) {
 		// show message

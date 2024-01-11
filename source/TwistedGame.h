@@ -42,6 +42,7 @@
 #include "Explosion.h"
 #include <memory>
 #include "PowerUp.h"
+#include "Maze.h"
 
 
 //=============================================================================
@@ -69,6 +70,9 @@ private:
     float powerUpTimer;
     float powerUpTimeLimit;
     float titleLoadingTimer;
+
+    // Maze Gen work
+    Maze maze; // constructor called from this object's constuctor
 
     // Game objects
     POWERUP currentPowerUp;
@@ -102,9 +106,6 @@ private:
     Image uiCurrentPowerUpIcon;
     Image uiCurrentPowerUpDiamond;
     COLOR_ARGB currentPowerUpColor;
-
-    // ball shadow
-    float timer;
 
     // sprites
     Player player;
