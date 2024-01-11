@@ -129,7 +129,7 @@
     <ClCompile Include="ScaleXTo.cpp" />
     <ClCompile Include="Shake.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="fallback.cpp" />
+    <ClCompile Include="TwistedGame.cpp" />
     <ClCompile Include="level.h" />
     <ClCompile Include="textButton.cpp" />
     <ClCompile Include="textDX.cpp" />

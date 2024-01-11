@@ -33,7 +33,7 @@
     <ClCompile Include="winmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fallback.cpp">
+    <ClCompile Include="TwistedGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="textureManager.cpp">
