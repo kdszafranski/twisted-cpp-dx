@@ -926,7 +926,32 @@ void TwistedGame::renderTitleScreen()
 
 void TwistedGame::renderMaze()
 {
+	int spacing = 10;
+	int tileSize = 20;
 
+	int x = spacing;
+	int y = spacing;
+	for (int i = 0; i < maze.height; i++) {
+		// cols		
+		for (int j = 0; j < maze.width; j++) {
+			
+			Block newBlock;
+
+			if (!newBlock.initialize(this, tileSize, tileSize, 1, &floorTexture))
+			{
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
+			}
+
+			newBlock.setPosition(x, y);
+			newBlock.setVelocity(VECTOR2(0, 0));
+
+			newBlock.draw();
+
+			x += tileSize + spacing;
+		}
+		x = spacing;
+		y += tileSize + spacing;
+	}
 	console.renderLog();
 }
 
