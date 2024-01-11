@@ -108,6 +108,8 @@ void TwistedGame::startNewGame()
 	// reset game variables
 	resetGame();
 
+	maze.Generate();
+
 	//loadRandomLevel();
 
 	// play!
@@ -944,6 +946,10 @@ void TwistedGame::renderMaze()
 
 			newBlock.setPosition(x, y);
 			newBlock.setVelocity(VECTOR2(0, 0));
+			
+			if (maze.cells.at(i).at(j).bVisited) {
+				newBlock.setColorFilter(graphicsNS::BLUE);
+			}
 
 			newBlock.draw();
 

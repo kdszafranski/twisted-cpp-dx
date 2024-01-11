@@ -11,15 +11,22 @@
 
 using namespace std;
 
+struct Cell
+{
+	bool bVisited = false;
+};
+
 class Maze
 {
 public:
 	unsigned int height;
 	unsigned int width;
-	vector<vector<int>> cells;
+	vector<vector<Cell>> cells;
 
 public:
 	Maze();
 	~Maze();
+
+	void Generate();
 };
 
