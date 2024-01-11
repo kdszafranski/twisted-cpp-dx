@@ -902,8 +902,8 @@ void TwistedGame::render()
 				renderTitleScreen();
 				break;
 			case GAME:
-				renderGameScreen();
-				break;
+				renderMaze();
+				//renderGameScreen();
 				break;
 		}
 
@@ -921,6 +921,12 @@ void TwistedGame::renderTitleScreen()
 	newGameButton.draw();
 
 	titleImage.draw();
+	console.renderLog();
+}
+
+void TwistedGame::renderMaze()
+{
+
 	console.renderLog();
 }
 

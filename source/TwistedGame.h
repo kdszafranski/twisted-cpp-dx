@@ -141,6 +141,7 @@ public:
     void ai();          // "
     void collisions() override;  // "
     void render();  // render game objects
+    void renderMaze();
     void renderTitleScreen();
     void renderGameScreen();
     void renderUI(); // display UI
