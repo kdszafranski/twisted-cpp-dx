@@ -5,6 +5,21 @@
 // Copyright (c) 2011 by: 
 // Charles Kelly
 
+//#ifndef ENUMTHING 
+//#define ENUMTHING
+//// Should be in enums.h but includes are a jumbled uber-mess
+//ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
+//    orig = static_cast<ePlayerMoveDirection>(orig + 1);
+//    if (orig > LEFT) {
+//        orig = UP;
+//        return orig;
+//    } else {
+//        return orig;
+//    }
+//}
+//#endif
+
+
 #ifndef _BREAKOUT_H_             // prevent multiple definitions if this 
 #define _BREAKOUT_H_             // ..file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
@@ -28,20 +43,6 @@
 #include "Explosion.h"
 #include <memory>
 #include "PowerUp.h"
-
-#ifndef ENUMTHING 
-#define ENUMTHING
-// Should be in enums.h but includes are a jumbled uber-mess
-ePlayerMoveDirection& operator+=(ePlayerMoveDirection& orig, int) {
-    orig = static_cast<ePlayerMoveDirection>(orig + 1);
-    if (orig > LEFT) {
-        orig = UP;
-        return orig;
-    } else {
-        return orig;
-    }
-}
-#endif
 
 
 //=============================================================================
