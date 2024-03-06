@@ -1,10 +1,12 @@
 #include "Maze.h"
+#include <time.h>
 
 Maze::Maze()
 {
 	height = 10;
 	width = 10;
 	cells.clear();
+	nextCell = nullptr;
 
 	// 0 equals wall
 	// 1 equals traversable
@@ -52,6 +54,7 @@ void Maze::Generate()
 
 	// Pop a cell from the stack and make it a current cell
 	checkCells.push_back(someCell);
+	srand(time(NULL));
 
 	while (checkCells.size() > 0) {
 		// need a ref into this cell inside the master cell list
@@ -59,33 +62,47 @@ void Maze::Generate()
 		checkCells.pop_back();
 
 		// If the current cell has any neighbours which have not been visited
-		// 
-		// check right
-		int dir = 2; // east
+		int randNum = (rand() % 2) + 1;
 
-		// Choose one of the unvisited neighbours
-		if (currentCell->myX + 1 < width) {
-			Cell* visit = GetCell(currentCell->myX + 1, currentCell->myY);
-			if (visit->bVisited == false) {
+		if (GetUnvisitedCell(currentCell)) {
+			// true, so nextCell is populated with the next cell
+			if (nextCell->bVisited == false) {
 				currentCell->bVisited = true;
 				// Remove the wall between the current cell and the chosen cell
+				if (nextCell->myX - currentCell->myX == 0) {
+					// we went north/south
+					currentCell->southWall(false);
+				}
 				currentCell->eastWall = false;
 				// Mark the chosen cell as visited and push it to the stack
-				checkCells.push_back(visit);
+				checkCells.push_back(nextCell);
 			}
 		}
 	}
 	
+}
 
-	//for (int i = 0; i < height; i++) {
-	//	// cols		
-	//	for (int j = 0; j < width; j++) {
-	//		currentCell = &cells.at(i).at(j);
-	//		
+bool Maze::GetUnvisitedCell(Cell* cell) 
+{
+	// go in 4 directions and see if there is 
+	nextCell = nullptr;
 
+	// East
+	if (cell->myX + 1 <= width) {
+		nextCell = GetCell(cell->myX + 1, cell->myY);
+		if (!nextCell->bVisited) {
+			return true;
+		}
+	}
+	// South
+	if (cell->myY + 1 <= height) {
+		nextCell = GetCell(cell->myX, cell->myY + 1);
+		if (!nextCell->bVisited) {
+			return true;
+		}
+	}
 
-	//	}
-	//}
+	return nullptr;
 }
 
 void Maze::VisitCell(Cell *cell)

@@ -946,7 +946,6 @@ void TwistedGame::renderMaze()
 				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
 			}
 
-
 			if (currentCell.southWall && currentCell.eastWall) {
 				newBlock.setCurrentFrame(0);
 			} else if (!currentCell.southWall && currentCell.eastWall) {
@@ -961,7 +960,7 @@ void TwistedGame::renderMaze()
 			newBlock.setVelocity(VECTOR2(0, 0));
 			
 			if (maze.cells.at(i).at(j).bVisited) {
-				//newBlock.setColorFilter(graphicsNS::LTGRAY);
+				newBlock.setColorFilter(graphicsNS::ALPHA50);
 			}
 
 			newBlock.draw();

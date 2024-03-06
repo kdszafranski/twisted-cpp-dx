@@ -28,12 +28,14 @@ public:
 	unsigned int width;
 	vector<vector<Cell>> cells;
 	vector<Cell*> checkCells;
+	Cell* nextCell;
 
 public:
 	Maze();
 	~Maze();
 
 	void Generate();
+	Cell* Maze::GetUnvisitedCell(Cell* cell);
 	void VisitCell(Cell *cell);
 	Cell* GetCell(int x, int y);
 };
