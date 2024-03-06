@@ -19,6 +19,8 @@ Maze::Maze()
 			Cell cell;
 			cell.myX = i;
 			cell.myY = j;
+			cell.northWall = 1;
+			cell.eastWall = 1;
 			vec.push_back(cell);
 		}
 		// add filled vector to outer vector
@@ -46,17 +48,16 @@ void Maze::Generate()
 	Cell someCell = GetCell(5, 6);
 	checkCells.push_back(someCell);
 
-	while (checkCells.size() > 0) {
-		Cell* currentCell = &checkCells.back();
+	//while (checkCells.size() > 0) {
+	//	Cell* currentCell = &checkCells.back();
 
-		// check right
-		Cell* visit = GetCell(currentCell->myX + 1, currentCell->myY);
-		if (visit) {
-			if (visit->bVisited == false) {
+	//	// check right
+	//	Cell visit = GetCell(currentCell->myX + 1, currentCell->myY);
+	//		if (visit.bVisited == false) {
 
-			}
-		}
-	}
+	//		}
+	//}
+	
 
 	//for (int i = 0; i < height; i++) {
 	//	// cols		

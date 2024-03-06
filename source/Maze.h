@@ -16,6 +16,8 @@ struct Cell
 {
 	int myX;
 	int myY;
+	int northWall = 1;
+	int eastWall = 1;
 	bool bVisited = false;
 };
 

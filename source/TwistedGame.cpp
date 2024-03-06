@@ -928,8 +928,8 @@ void TwistedGame::renderTitleScreen()
 
 void TwistedGame::renderMaze()
 {
-	int spacing = 10;
-	int tileSize = 20;
+	int spacing = 0;
+	int tileSize = 32;
 
 	int x = spacing;
 	int y = spacing;
@@ -937,11 +937,23 @@ void TwistedGame::renderMaze()
 		// cols		
 		for (int j = 0; j < maze.width; j++) {
 			
+			Cell currentCell = maze.cells.at(i).at(j);
 			Block newBlock;
 
-			if (!newBlock.initialize(this, tileSize, tileSize, 1, &floorTexture))
+			if (!newBlock.initialize(this, tileSize, tileSize, 2, &floorTexture))
 			{
 				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
+			}
+
+
+			if (currentCell.northWall == 1 && currentCell.eastWall == 1) {
+				newBlock.setCurrentFrame(0);
+			} else if (currentCell.northWall == 0 && currentCell.eastWall == 1) {
+				newBlock.setCurrentFrame(1);
+			} else if (currentCell.northWall == 1) {
+				newBlock.setCurrentFrame(2);
+			} else {
+				newBlock.setCurrentFrame(3); // empty
 			}
 
 			newBlock.setPosition(x, y);
