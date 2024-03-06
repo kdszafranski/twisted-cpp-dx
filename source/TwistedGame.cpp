@@ -933,9 +933,10 @@ void TwistedGame::renderMaze()
 
 	int x = spacing;
 	int y = spacing;
-	for (int i = 0; i < maze.height; i++) {
-		// cols		
-		for (int j = 0; j < maze.width; j++) {
+	// cols
+	for (int i = 0; i < maze.width; i++) {
+		// rows		
+		for (int j = 0; j < maze.height; j++) {
 			
 			Cell currentCell = maze.cells.at(i).at(j);
 			Block newBlock;
@@ -946,11 +947,11 @@ void TwistedGame::renderMaze()
 			}
 
 
-			if (currentCell.northWall == 1 && currentCell.eastWall == 1) {
+			if (currentCell.southWall && currentCell.eastWall) {
 				newBlock.setCurrentFrame(0);
-			} else if (currentCell.northWall == 0 && currentCell.eastWall == 1) {
+			} else if (!currentCell.southWall && currentCell.eastWall) {
 				newBlock.setCurrentFrame(1);
-			} else if (currentCell.northWall == 1) {
+			} else if (currentCell.southWall && !currentCell.eastWall) {
 				newBlock.setCurrentFrame(2);
 			} else {
 				newBlock.setCurrentFrame(3); // empty
@@ -960,15 +961,15 @@ void TwistedGame::renderMaze()
 			newBlock.setVelocity(VECTOR2(0, 0));
 			
 			if (maze.cells.at(i).at(j).bVisited) {
-				newBlock.setColorFilter(graphicsNS::BLUE);
+				//newBlock.setColorFilter(graphicsNS::LTGRAY);
 			}
 
 			newBlock.draw();
 
-			x += tileSize + spacing;
+			y += tileSize + spacing;
 		}
-		x = spacing;
-		y += tileSize + spacing;
+		y = spacing;
+		x += tileSize + spacing;
 	}
 	console.renderLog();
 }

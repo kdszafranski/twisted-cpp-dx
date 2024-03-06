@@ -10,17 +10,19 @@ Maze::Maze()
 	// 1 equals traversable
 	
 	// rows
-	for (int i = 0; i < height; i++) {
+	for (int i = 0; i < width; i++) {
 		// cols		
 		// create new vector
 		std::vector<Cell> vec;
 		// fill new vector
-		for (int j = 0; j < width; j++) {
+		for (int j = 0; j < height; j++) {
 			Cell cell;
 			cell.myX = i;
 			cell.myY = j;
-			cell.northWall = 1;
-			cell.eastWall = 1;
+			cell.southWall = true;
+			cell.eastWall = true;
+			cell.bVisited = false;
+
 			vec.push_back(cell);
 		}
 		// add filled vector to outer vector
@@ -45,18 +47,34 @@ While the stack is not empty
 */
 void Maze::Generate()
 {
-	Cell someCell = GetCell(5, 6);
+	Cell* someCell = GetCell(0,0);
+	someCell->bVisited = true;
+
+	// Pop a cell from the stack and make it a current cell
 	checkCells.push_back(someCell);
 
-	//while (checkCells.size() > 0) {
-	//	Cell* currentCell = &checkCells.back();
+	while (checkCells.size() > 0) {
+		// need a ref into this cell inside the master cell list
+		Cell* currentCell = checkCells.back();
+		checkCells.pop_back();
 
-	//	// check right
-	//	Cell visit = GetCell(currentCell->myX + 1, currentCell->myY);
-	//		if (visit.bVisited == false) {
+		// If the current cell has any neighbours which have not been visited
+		// 
+		// check right
+		int dir = 2; // east
 
-	//		}
-	//}
+		// Choose one of the unvisited neighbours
+		if (currentCell->myX + 1 < width) {
+			Cell* visit = GetCell(currentCell->myX + 1, currentCell->myY);
+			if (visit->bVisited == false) {
+				currentCell->bVisited = true;
+				// Remove the wall between the current cell and the chosen cell
+				currentCell->eastWall = false;
+				// Mark the chosen cell as visited and push it to the stack
+				checkCells.push_back(visit);
+			}
+		}
+	}
 	
 
 	//for (int i = 0; i < height; i++) {
@@ -76,8 +94,8 @@ void Maze::VisitCell(Cell *cell)
 
 }
 
-Cell Maze::GetCell(int x, int y)
+Cell* Maze::GetCell(int x, int y)
 {
-	return cells.at(x).at(y);
+	return &cells.at(x).at(y);
 }
 

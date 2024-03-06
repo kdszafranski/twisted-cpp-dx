@@ -16,8 +16,8 @@ struct Cell
 {
 	int myX;
 	int myY;
-	int northWall = 1;
-	int eastWall = 1;
+	bool southWall;
+	bool eastWall;
 	bool bVisited = false;
 };
 
@@ -27,7 +27,7 @@ public:
 	unsigned int height;
 	unsigned int width;
 	vector<vector<Cell>> cells;
-	vector<Cell> checkCells;
+	vector<Cell*> checkCells;
 
 public:
 	Maze();
@@ -35,6 +35,6 @@ public:
 
 	void Generate();
 	void VisitCell(Cell *cell);
-	Cell GetCell(int x, int y);
+	Cell* GetCell(int x, int y);
 };
 
