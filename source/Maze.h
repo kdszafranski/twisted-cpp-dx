@@ -35,7 +35,7 @@ public:
 	~Maze();
 
 	void Generate();
-	Cell* Maze::GetUnvisitedCell(Cell* cell);
+	bool Maze::GetUnvisitedCell(Cell* cell);
 	void VisitCell(Cell *cell);
 	Cell* GetCell(int x, int y);
 };

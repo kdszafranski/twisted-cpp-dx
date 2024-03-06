@@ -1,19 +1,20 @@
 #include "Maze.h"
 #include <time.h>
+#include <cmath>;
 
 Maze::Maze()
 {
-	height = 10;
-	width = 10;
+	height = 7;
+	width = 7;
 	cells.clear();
 	nextCell = nullptr;
 
 	// 0 equals wall
 	// 1 equals traversable
 	
-	// rows
+	// cols
 	for (int i = 0; i < width; i++) {
-		// cols		
+		// rows		
 		// create new vector
 		std::vector<Cell> vec;
 		// fill new vector
@@ -49,36 +50,79 @@ While the stack is not empty
 */
 void Maze::Generate()
 {
-	Cell* someCell = GetCell(0,0);
-	someCell->bVisited = true;
-
-	// Pop a cell from the stack and make it a current cell
-	checkCells.push_back(someCell);
 	srand(time(NULL));
+	Cell* someCell;
 
-	while (checkCells.size() > 0) {
-		// need a ref into this cell inside the master cell list
-		Cell* currentCell = checkCells.back();
-		checkCells.pop_back();
+	// binary tree either goes east or south, powering thru
+	// cols
+	for (int i = 0; i < width; i++) {
+		// rows		
+		for (int j = 0; j < height; j++) {
+			someCell = GetCell(i, j);
+			//someCell->bVisited = true;
 
-		// If the current cell has any neighbours which have not been visited
-		int randNum = (rand() % 2) + 1;
+			// top row
+			if (i == width - 1) {
+				someCell->southWall = false;
+				//someCell->bVisited = true;
+			}
+			// right column
+			if (j == 0) {
+				someCell->eastWall = false;
+				//someCell->bVisited = true;
+			}
 
-		if (GetUnvisitedCell(currentCell)) {
-			// true, so nextCell is populated with the next cell
-			if (nextCell->bVisited == false) {
-				currentCell->bVisited = true;
-				// Remove the wall between the current cell and the chosen cell
-				if (nextCell->myX - currentCell->myX == 0) {
-					// we went north/south
-					currentCell->southWall(false);
+			int randNum = (rand() % 2) + 1;
+			if (randNum == 1) {
+				// go south if in bounds
+				if (someCell->myY + 1 < height) {
+					someCell->southWall = false;
 				}
-				currentCell->eastWall = false;
-				// Mark the chosen cell as visited and push it to the stack
-				checkCells.push_back(nextCell);
+			} else {
+				// go east if in bounds
+				if (someCell->myX + 1 < width) {
+					someCell->eastWall = false;
+				}
 			}
 		}
 	}
+
+	someCell = GetCell(0, 0);
+	someCell->southWall = false;
+	someCell->eastWall = false;
+
+	someCell = GetCell(width - 1, height - 1);
+	someCell->southWall = false;
+	someCell->eastWall = false;
+
+
+	// Pop a cell from the stack and make it a current cell
+	//checkCells.push_back(someCell);
+	//srand(time(NULL));
+
+	//while (checkCells.size() > 0) {
+	//	// need a ref into this cell inside the master cell list
+	//	Cell* currentCell = checkCells.back();
+	//	checkCells.pop_back();
+
+	//	// If the current cell has any neighbours which have not been visited
+	//	int randNum = (rand() % 2) + 1;
+
+	//	if (GetUnvisitedCell(currentCell)) {
+	//		// true, so nextCell is populated with the next cell
+	//		if (nextCell->bVisited == false) {
+	//			currentCell->bVisited = true;
+	//			// Remove the wall between the current cell and the chosen cell
+	//			if (nextCell->myX - currentCell->myX == 0) {
+	//				// we went north/south
+	//				currentCell->southWall(false);
+	//			}
+	//			currentCell->eastWall = false;
+	//			// Mark the chosen cell as visited and push it to the stack
+	//			checkCells.push_back(nextCell);
+	//		}
+	//	}
+	//}
 	
 }
 
