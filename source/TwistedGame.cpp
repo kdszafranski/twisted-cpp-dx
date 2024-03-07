@@ -36,9 +36,9 @@ TwistedGame::TwistedGame()
 	titleLoading = false;
 	currentPowerUp = FAST; // not actually applied, null would be better
 	animId = 0;
-	timer = 0;
 	score = 0;
 	isPaused = false;
+
 }
 
 //=============================================================================
@@ -108,7 +108,9 @@ void TwistedGame::startNewGame()
 	// reset game variables
 	resetGame();
 
-	loadRandomLevel();
+	resetMaze();
+
+	//loadRandomLevel();
 
 	// play!
 	//restartBall();
@@ -124,7 +126,6 @@ void TwistedGame::resetGame()
 	isPaused = false;
 	bIsOnPath = true;
 	ballCount = MAX_BALLS;
-	timer = 0;
 	powerUpTimer = 0;
 	score = 0;
 	currentLevel = 0; // points into levels vector, 0 is the first level
@@ -149,6 +150,12 @@ void TwistedGame::exitGame()
 
 	// go to main menu
 	setTitleScreen();
+}
+
+void TwistedGame::resetMaze()
+{
+	maze = Maze();
+	maze.Generate();
 }
 
 //=============================================================================
@@ -627,8 +634,6 @@ void TwistedGame::updateTurnables(float frameTime, ePlayerMoveDirection pDir)
 
 void TwistedGame::updateGameOverScreen(float frameTime)
 {
-	// pick out a block and bounce it
-	timer += frameTime;
 }
 
 /// <summary>
@@ -760,7 +765,8 @@ void TwistedGame::checkCheatInput()
 		}
 
 		if (input->wasKeyPressed(ENTER_KEY)) {
-			startNewGame();
+			//startNewGame();
+			resetMaze();
 		}
 	}
 }
@@ -887,7 +893,7 @@ void TwistedGame::removeBlock(int index)
 
 void TwistedGame::checkGameOver()
 {
-
+	gameOver = false;
 	return;
 }
 
@@ -905,8 +911,8 @@ void TwistedGame::render()
 				renderTitleScreen();
 				break;
 			case GAME:
-				renderGameScreen();
-				break;
+				renderMaze();
+				//renderGameScreen();
 				break;
 		}
 
@@ -924,6 +930,56 @@ void TwistedGame::renderTitleScreen()
 	newGameButton.draw();
 
 	titleImage.draw();
+	console.renderLog();
+}
+
+void TwistedGame::renderMaze()
+{
+	int spacing = 0;
+	float scale = 2;
+	int tileSize = 32;
+
+	int startPos = 50;
+	int x = startPos, y = startPos;
+
+	// cols
+	for (int i = 0; i < maze.width; i++) {
+		// rows		
+		for (int j = 0; j < maze.height; j++) {
+			
+			Cell const currentCell = maze.cells.at(i).at(j);
+			Block newBlock;
+
+			if (!newBlock.initialize(this, tileSize, tileSize, 2, &floorTexture))
+			{
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
+			}
+
+			newBlock.setScale(scale);
+			if (currentCell.southWall && currentCell.eastWall) {
+				newBlock.setCurrentFrame(0);
+			} else if (!currentCell.southWall && currentCell.eastWall) {
+				newBlock.setCurrentFrame(1);
+			} else if (currentCell.southWall && !currentCell.eastWall) {
+				newBlock.setCurrentFrame(2);
+			} else {
+				newBlock.setCurrentFrame(3); // empty
+			}
+
+			newBlock.setPosition(x, y);
+			newBlock.setVelocity(VECTOR2(0, 0));
+			
+			if (maze.cells.at(i).at(j).bVisited) {
+				newBlock.setColorFilter(graphicsNS::ALPHA50);
+			}
+
+			newBlock.draw();
+
+			y += tileSize * scale + spacing;
+		}
+		y = startPos;
+		x += tileSize * scale + spacing;
+	}
 	console.renderLog();
 }
 
@@ -967,13 +1023,13 @@ void TwistedGame::renderGameScreen()
 	backgroundImage.draw();
 
 	// draw paths
-	for (int i = 0; i < blocks.size(); i++) {
-		blocks.at(i).draw();
-	}
+	//for (int i = 0; i < blocks.size(); i++) {
+	//	blocks.at(i).draw();
+	//}
 
-	for (int i = 0; i < turnables.size(); i++) {
-		turnables.at(i).draw();
-	}
+	//for (int i = 0; i < turnables.size(); i++) {
+	//	turnables.at(i).draw();
+	//}
 
 	if (gameOver) {
 		// show message

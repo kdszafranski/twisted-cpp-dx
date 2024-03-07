@@ -50,7 +50,7 @@ const char ICONS_PATH[] = "images\\ui-icons.png";
 const char LOGO_PATH[] = "images\\Logo.png";
 const char PLAYER_PATH[] = "images\\Playerarrow.png";
 const char RACER_PATH[] = "images\\racers.png";
-const char TILE_PATH[] = "images\\Floor.png";
+const char TILE_PATH[] = "images\\maze-tile-with-walls.png";
 const char TURNABLE_BASE_PATH[] = "images\\3LongShape.png";
 const char NG_BUTTON_PATH[] = "images\\buttons.png";
 const char POWERUP_PATH[] = "images\\powerup-letters.png";
@@ -60,8 +60,8 @@ const char POWERUP_PATH[] = "images\\powerup-letters.png";
 const char CLASS_NAME[] = "Fallback";
 const char GAME_TITLE[] = "TWISTED TUNNELS";
 const bool FULLSCREEN = false;              // windowed or fullscreen
-const UINT GAME_WIDTH =  1024;               // width of game in pixels
-const UINT GAME_HEIGHT = 768;               // height of game in pixels
+const UINT GAME_WIDTH =  1200;               // width of game in pixels
+const UINT GAME_HEIGHT = 1200;               // height of game in pixels
  
 // game
 const int POWERUP_POINT_VALUE = 50;

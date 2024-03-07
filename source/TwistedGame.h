@@ -42,6 +42,7 @@
 #include "Explosion.h"
 #include <memory>
 #include "PowerUp.h"
+#include "Maze.h"
 
 
 //=============================================================================
@@ -69,6 +70,9 @@ private:
     float powerUpTimer;
     float powerUpTimeLimit;
     float titleLoadingTimer;
+
+    // Maze Gen work
+    Maze maze; // constructor called from this object's constuctor
 
     // Game objects
     POWERUP currentPowerUp;
@@ -103,9 +107,6 @@ private:
     Image uiCurrentPowerUpDiamond;
     COLOR_ARGB currentPowerUpColor;
 
-    // ball shadow
-    float timer;
-
     // sprites
     Player player;
     Block block;
@@ -124,6 +125,7 @@ public:
     // Initialize the game
     void initialize(HWND hwnd);
     void resetGame();
+    void TwistedGame::resetMaze();
 
     // Game Loop stuff
     void update(float frameTime);      // must override pure virtual from Game
@@ -140,6 +142,7 @@ public:
     void ai();          // "
     void collisions() override;  // "
     void render();  // render game objects
+    void renderMaze();
     void renderTitleScreen();
     void renderGameScreen();
     void renderUI(); // display UI

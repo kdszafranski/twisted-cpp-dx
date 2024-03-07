@@ -229,7 +229,7 @@ void Game::run(HWND hwnd)
             case GAME:
                 update(frameTime);                   // update all game items
                 //ai();                       // artificial intelligence
-                collisions();               // handle collisions
+                //collisions();               // handle collisions
                 //input->vibrateControllers(frameTime); // handle controller vibration
                 break;
             case EDITOR:
