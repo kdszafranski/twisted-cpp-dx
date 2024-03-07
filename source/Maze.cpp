@@ -4,8 +4,8 @@
 
 Maze::Maze()
 {
-	height = 25;
-	width = 25;
+	height = 11;
+	width = 11;
 	cells.clear();
 	nextCell = nullptr;
 

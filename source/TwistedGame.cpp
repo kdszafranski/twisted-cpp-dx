@@ -935,8 +935,8 @@ void TwistedGame::renderTitleScreen()
 
 void TwistedGame::renderMaze()
 {
-	int spacing = 1;
-	float scale = 1;
+	int spacing = 0;
+	float scale = 2;
 	int tileSize = 32;
 
 	int startPos = 50;
