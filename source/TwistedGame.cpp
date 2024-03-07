@@ -935,7 +935,7 @@ void TwistedGame::renderTitleScreen()
 
 void TwistedGame::renderMaze()
 {
-	int spacing = 0;
+	int spacing = 1;
 	float scale = 1;
 	int tileSize = 32;
 
@@ -975,10 +975,10 @@ void TwistedGame::renderMaze()
 
 			newBlock.draw();
 
-			y += tileSize * scale;
+			y += tileSize * scale + spacing;
 		}
 		y = startPos;
-		x += tileSize * scale;
+		x += tileSize * scale + spacing;
 	}
 	console.renderLog();
 }
