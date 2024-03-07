@@ -4,8 +4,8 @@
 
 Maze::Maze()
 {
-	height = 7;
-	width = 7;
+	height = 25;
+	width = 25;
 	cells.clear();
 	nextCell = nullptr;
 
@@ -67,7 +67,7 @@ void Maze::Generate()
 				//someCell->bVisited = true;
 			}
 			// right column
-			if (j == 0) {
+			if (j == height - 1) {
 				someCell->eastWall = false;
 				//someCell->bVisited = true;
 			}

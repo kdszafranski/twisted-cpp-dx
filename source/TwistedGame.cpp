@@ -108,7 +108,7 @@ void TwistedGame::startNewGame()
 	// reset game variables
 	resetGame();
 
-	maze.Generate();
+	resetMaze();
 
 	//loadRandomLevel();
 
@@ -150,6 +150,12 @@ void TwistedGame::exitGame()
 
 	// go to main menu
 	setTitleScreen();
+}
+
+void TwistedGame::resetMaze()
+{
+	maze = Maze();
+	maze.Generate();
 }
 
 //=============================================================================
@@ -759,7 +765,8 @@ void TwistedGame::checkCheatInput()
 		}
 
 		if (input->wasKeyPressed(ENTER_KEY)) {
-			startNewGame();
+			//startNewGame();
+			resetMaze();
 		}
 	}
 }
@@ -929,16 +936,18 @@ void TwistedGame::renderTitleScreen()
 void TwistedGame::renderMaze()
 {
 	int spacing = 0;
+	float scale = 1;
 	int tileSize = 32;
 
-	int x = spacing;
-	int y = spacing;
+	int startPos = 50;
+	int x = startPos, y = startPos;
+
 	// cols
 	for (int i = 0; i < maze.width; i++) {
 		// rows		
 		for (int j = 0; j < maze.height; j++) {
 			
-			Cell currentCell = maze.cells.at(i).at(j);
+			Cell const currentCell = maze.cells.at(i).at(j);
 			Block newBlock;
 
 			if (!newBlock.initialize(this, tileSize, tileSize, 2, &floorTexture))
@@ -946,6 +955,7 @@ void TwistedGame::renderMaze()
 				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing block entity"));
 			}
 
+			newBlock.setScale(scale);
 			if (currentCell.southWall && currentCell.eastWall) {
 				newBlock.setCurrentFrame(0);
 			} else if (!currentCell.southWall && currentCell.eastWall) {
@@ -965,10 +975,10 @@ void TwistedGame::renderMaze()
 
 			newBlock.draw();
 
-			y += tileSize + spacing;
+			y += tileSize * scale;
 		}
-		y = spacing;
-		x += tileSize + spacing;
+		y = startPos;
+		x += tileSize * scale;
 	}
 	console.renderLog();
 }

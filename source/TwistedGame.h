@@ -125,6 +125,7 @@ public:
     // Initialize the game
     void initialize(HWND hwnd);
     void resetGame();
+    void TwistedGame::resetMaze();
 
     // Game Loop stuff
     void update(float frameTime);      // must override pure virtual from Game
