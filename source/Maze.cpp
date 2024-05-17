@@ -88,10 +88,11 @@ void Maze::Generate()
 		}
 	}
 
+	// starting cell
 	someCell = GetCell(0, 0);
 	someCell->southWall = false;
 	someCell->eastWall = false;
-
+	// exit/ending cell
 	someCell = GetCell(width - 1, height - 1);
 	someCell->southWall = false;
 	someCell->eastWall = false;
