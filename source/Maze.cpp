@@ -54,6 +54,7 @@ void Maze::Generate()
 	Cell* someCell;
 
 	// binary tree either goes east or south, powering thru
+	// 
 	// cols
 	for (int i = 0; i < width; i++) {
 		// rows		
